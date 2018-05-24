@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.ruslan.curs2project">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name=".Application"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.base.NavigationBaseActivity"/>
+        <activity android:name=".ui.fragments.single.RegistrationActivity"/>
+        <activity android:name=".ui.fragments.lists.member.member_item.PersonalActivity"/>
+
+        <activity android:name=".ui.fragments.lists.book.main_book_list.BooksListActivity"/>
+        <activity android:name=".ui.fragments.lists.book.book_item.BookActivity"/>
+        <activity android:name=".ui.fragments.lists.vid.add_crossing.AddCrossingActivity"/>
+        <activity android:name=".ui.fragments.lists.vid.crossing_item.CrossingActivity"/>
+        <activity android:name=".ui.fragments.lists.vid.crossing_list.CrossingListActivity"/>
+        <activity android:name=".ui.fragments.lists.vid.crossing_item.fragments.image.ImageActivity"/>
+
+        <activity android:name=".ui.fragments.lists.vid.add_point.AddPointActivity"/>
+        <activity android:name=".ui.fragments.lists.member.member_list.member.MemberListActivity"/>
+        <activity android:name=".ui.fragments.lists.member.member_list.reader.ReaderListActivity"/>
+
+
+        <!-- <meta-data
+             android:name="com.google.android.geo.API_KEY"
+             android:value="AIzaSyD_q37sWQ6pINJtcjgypw2BQ3hjwWqnfLg"/>-->
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+    </application>
+
+</manifest>

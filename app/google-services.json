@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "278878123258",
+    "firebase_url": "https://curs2project.firebaseio.com",
+    "project_id": "curs2project",
+    "storage_bucket": "curs2project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278878123258:android:f48d25106a9417db",
+        "android_client_info": {
+          "package_name": "com.example.ruslan.curs2project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278878123258-2ob6hnk4r16rne47m14b17cpsshg6hqt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ruslan.curs2project",
+            "certificate_hash": "f0ae4c259e208b6c90379d581f8462f931c8339f"
+          }
+        },
+        {
+          "client_id": "278878123258-1ius6qdb0ra3c6eqttvj70q7uso4nhuf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuGa2q04BSS6rru8yBQ1EKKvSVczChUyE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278878123258-1ius6qdb0ra3c6eqttvj70q7uso4nhuf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
