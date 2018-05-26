@@ -20,9 +20,18 @@
             android:layout_height="wrap_content"
             android:background="@color/primary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:layout_scrollFlags="scroll|enterAlways|snap" />
+            />
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
     <include layout="@layout/fragment_recycler_list"/>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

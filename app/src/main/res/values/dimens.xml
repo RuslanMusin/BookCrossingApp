@@ -23,9 +23,10 @@
     <dimen name="padding_xlarge">32dp</dimen>
 
 
-    <dimen name="height_nav_header">240dp</dimen>
+    <dimen name="height_nav_header">220dp</dimen>
     <dimen name="height_app_bar">240dp</dimen>
     <dimen name="size_image_list">48dp</dimen>
+    <dimen name="size_image_medium">60dp</dimen>
     <dimen name="size_item_large">72dp</dimen>
 
     <dimen name="small_intrinsic_padding">4dp</dimen>
@@ -48,7 +49,7 @@
 
     <dimen name="profile_photo_side">150dp</dimen>
 
-    <dimen name="profile_screen_avatar_size">100dp</dimen>
+    <dimen name="profile_screen_avatar_size">110dp</dimen>
 
     <dimen name="profile_screen_margin_top_progress_bar">120dp</dimen>
 

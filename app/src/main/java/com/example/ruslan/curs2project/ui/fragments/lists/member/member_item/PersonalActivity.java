@@ -17,11 +17,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ruslan.curs2project.R;
+import com.example.ruslan.curs2project.api.ApiFactory;
 import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.model.db_dop_models.UserRelation;
+import com.example.ruslan.curs2project.model.pojo.Message;
+import com.example.ruslan.curs2project.model.pojo.Notification;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.NavigationBaseActivity;
+import com.example.ruslan.curs2project.ui.base.NavigationPresenter;
+import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_list.CrossingListActivity;
 import com.example.ruslan.curs2project.ui.fragments.single.ChangeUserDataActivity;
+import com.example.ruslan.curs2project.utils.FormatterUtil;
+import com.example.ruslan.curs2project.utils.RxUtils;
+import com.example.ruslan.curs2project.utils.views.ExpandableTextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +38,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
+
+import java.util.Date;
+
+import io.reactivex.Single;
 
 import static com.example.ruslan.curs2project.utils.Const.ADD_FRIEND;
 import static com.example.ruslan.curs2project.utils.Const.ADD_REQUEST;
@@ -46,11 +58,11 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
 
     private AppCompatButton btnChangeData;
 
-    private TextView tvUsername;
     private TextView tvCountry;
     private TextView tvCity;
-    private TextView tvDesc;
+    private ExpandableTextView tvDesc;
     private TextView tvGender;
+    private TextView tvCrossings;
 
     private TextView tvNameBar;
 
@@ -121,8 +133,34 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
         if(OWNER_TYPE.equals(type)) {
             initViews();
         }
+        Message message = new Message();
+        Notification notification = new Notification();
+        notification.setTitle("In " + "gop" + " changed date");
+        notification.setBody("new data : " + FormatterUtil.formatFirebaseDay(new Date(1527220800000L)) +
+                " and owner : " + UserRepository.getCurrentId());
+
+        message.setNotification(notification);
+        message.setTo("/topics/-LDM3zALaf-tOwcT_vns");
+
+        String messageJson = new Gson().toJson(message);
+
+        Log.d(TAG_LOG, "messageGson =  " + messageJson);
+
+        Single<String> response = ApiFactory.getMessageService()
+                .sendMessage(message).compose(RxUtils.asyncSingle());;
+
+        response.subscribe(this::show,this::handle);
+
     }
 
+    private void handle(Throwable throwable) {
+        Log.d(TAG_LOG,throwable.getMessage());
+        throwable.printStackTrace();
+    }
+
+    private void show(String s) {
+        Log.d(TAG_LOG,"resp = " + s);
+    }
 
 
     @Override
@@ -135,6 +173,19 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
             case R.id.btn_add_friend :
                 actWithUser();
                 break;
+
+            case R.id.tv_crossings :
+                showCrossings();
+        }
+    }
+
+    private void showCrossings() {
+        User myUser = new User();
+        if(type.equals(OWNER_TYPE)) {
+            user.setId(UserRepository.getCurrentId());
+            CrossingListActivity.start(this,myUser);
+        } else {
+            CrossingListActivity.start(this,user);
         }
     }
 
@@ -185,6 +236,7 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
         supportActionBar(toolbar);
 
         btnAddFriend.setOnClickListener(this);
+        tvCrossings.setOnClickListener(this);
 //        setBackArrow(toolbar);
 
     }
@@ -192,11 +244,11 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
     private void findViews() {
         collapsingToolbar = findViewById(R.id.ct_personal);
         toolbar = findViewById(R.id.toolbar);
-        tvUsername = findViewById(R.id.tv_username);
         tvCountry = findViewById(R.id.tv_country);
         tvCity = findViewById(R.id.tv_city);
-        tvDesc = findViewById(R.id.tv_desc);
+        tvDesc = findViewById(R.id.extv_desc);
         tvGender = findViewById(R.id.tv_gender);
+        tvCrossings = findViewById(R.id.tv_crossings);
         ivPhoto = findViewById(R.id.iv_crossing);
 
         btnAddFriend = findViewById(R.id.btn_add_friend);
@@ -206,23 +258,8 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
             UserRepository userRepository = new UserRepository();
             Log.d(TAG, "user id = " + UserRepository.getCurrentId());
             DatabaseReference reference = userRepository.readUser(UserRepository.getCurrentId());
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "loadPost:onChange");
-                    user = dataSnapshot.getValue(User.class);
-
-                    Log.d(TAG, "user " + user.getId() + " " + user.getUsername());
-                    System.out.println("user " + user.getId() + " " + user.getUsername());
-
-                    setUserData();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "loadPost:onCancelled", databaseError.toException());
-                }
-            });
+            user = NavigationPresenter.getCurrentUser();
+            setUserData();
         } else {
             setUserData();
         }
@@ -233,7 +270,6 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
     }
 
     private void setUserData() {
-        tvUsername.setText(user.getUsername());
         tvCountry.setText(user.getCountry());
         tvCity.setText(user.getCity());
         tvGender.setText(user.getGender());
@@ -250,6 +286,8 @@ public class PersonalActivity extends NavigationBaseActivity implements View.OnC
         Glide.with(PersonalActivity.this)
                 .load(imageReference)
                 .into(ivPhoto);
+
+
 
 
         switch (type) {

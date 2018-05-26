@@ -1,5 +1,7 @@
 package com.example.ruslan.curs2project.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,10 +11,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ruslan.curs2project.R;
+import com.example.ruslan.curs2project.model.User;
+import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
+import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
+import com.example.ruslan.curs2project.ui.base.NavigationPresenter;
 import com.example.ruslan.curs2project.ui.fragments.lists.member.member_item.PersonalActivity;
 import com.example.ruslan.curs2project.ui.fragments.single.RegistrationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +27,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by Ruslan on 18.02.2018.
@@ -29,7 +40,7 @@ public class StartActivity extends BaseActivity implements View.OnClickListener{
 
     private Button enterBtn;
 
-    private Button registrBtn;
+    private TextView tvRegistration;
 
     private TextInputLayout tiUsername;
 
@@ -39,6 +50,9 @@ public class StartActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText etPassword;
 
+    private User user;
+
+
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -47,16 +61,22 @@ public class StartActivity extends BaseActivity implements View.OnClickListener{
 
     private static final String TAG = "EmailPassword";
 
+    public static void start(@NonNull Activity activity) {
+        Intent intent = new Intent(activity, PersonalActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_start);
+        setContentView(R.layout.activity_login);
 
         enterBtn = findViewById(R.id.btn_enter);
-        registrBtn = findViewById(R.id.btn_reg);
+        tvRegistration = findViewById(R.id.link_signup);
 
         enterBtn.setOnClickListener(this);
-        registrBtn.setOnClickListener(this);
+        tvRegistration.setOnClickListener(this);
 
         etUsername = findViewById(R.id.et_name);
         etPassword = findViewById(R.id.et_password);
@@ -80,7 +100,7 @@ public class StartActivity extends BaseActivity implements View.OnClickListener{
                 signIn(username,password);
                 break;
 
-            case R.id.btn_reg:
+            case R.id.link_signup:
                 goToRegistration();
                 break;
         }
@@ -146,10 +166,23 @@ public class StartActivity extends BaseActivity implements View.OnClickListener{
         return valid;
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(FirebaseUser firebaseUser) {
         hideProgressDialog();
-        if (user != null) {
-            goToBookList();
+        if (firebaseUser != null) {
+            DatabaseReference reference = RepositoryProvider.getUserRepository().readUser(UserRepository.getCurrentId());
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    user = dataSnapshot.getValue(User.class);
+                    NavigationPresenter.setCurrentUser(user);
+                    goToBookList();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 

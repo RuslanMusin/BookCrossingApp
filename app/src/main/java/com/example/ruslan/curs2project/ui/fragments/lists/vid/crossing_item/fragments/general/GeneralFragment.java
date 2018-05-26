@@ -46,6 +46,7 @@ import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.Comm
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.CrossingActivity;
 import com.example.ruslan.curs2project.utils.ImageLoadHelper;
 import com.example.ruslan.curs2project.utils.views.CircularImageView;
+import com.example.ruslan.curs2project.utils.views.ExpandableTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -75,7 +76,7 @@ public class GeneralFragment extends Fragment implements CrossingView,View.OnCli
     private TextView tvName;
     private TextView tvBookName;
     private TextView tvDate;
-    private TextView tvDescription;
+    private ExpandableTextView tvDescription;
 
     private TextView tvFollowers;
 
@@ -327,7 +328,7 @@ public class GeneralFragment extends Fragment implements CrossingView,View.OnCli
         tvName = view.findViewById(R.id.tv_name);
         tvBookName = view.findViewById(R.id.tv_book_name);
         tvDate = view.findViewById(R.id.tv_date);
-        tvDescription = view.findViewById(R.id.tv_desc);
+        tvDescription = view.findViewById(R.id.extv_desc);
 
         btnAddMember = view.findViewById(R.id.btn_add_member);
         btnAddFollower = view.findViewById(R.id.btn_add_follower);

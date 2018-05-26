@@ -14,14 +14,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
+import com.example.ruslan.curs2project.ui.StartActivity;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
+import com.example.ruslan.curs2project.ui.base.NavigationPresenter;
 import com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list.BooksListActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -60,12 +64,16 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     private RadioButton radioSexButton;
 
     private AppCompatButton btnRegistrNewReader;
-    private AppCompatButton btnUpload;
+    private TextView tvAddPhoto;
+    private LinearLayout liAddPhoto;
+    private TextView tvLogin;
 
     private TextInputLayout tiEmail;
     private TextInputLayout tiPassword;
     private TextInputLayout tiUsername;
     private TextInputLayout tiDate;
+
+    private User user;
 
     private Date birthday;
 
@@ -91,7 +99,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_registration);
+        setContentView(R.layout.activity_registration);
 
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -113,6 +121,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                 .build();
 
         autocompleteFragment.setFilter(typeFilter);
+        autocompleteFragment.setHint(getString(R.string.select_place));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -132,12 +141,15 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             }
         });
         btnRegistrNewReader = findViewById(R.id.btn_sign_up);
-        btnUpload = findViewById(R.id.btn_upload);
+        liAddPhoto = findViewById(R.id.li_add_photo);
+        tvAddPhoto = findViewById(R.id.tv_add_photo);
+        tvLogin = findViewById(R.id.link_login);
 
 //        setEditListener();
 
         btnRegistrNewReader.setOnClickListener(this);
-        btnUpload.setOnClickListener(this);
+        liAddPhoto.setOnClickListener(this);
+        tvLogin.setOnClickListener(this);
 
         setDateListener();
 
@@ -218,11 +230,15 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                 createAccount(username,password);
                 break;
 
-            case R.id.btn_upload:
+            case R.id.li_add_photo:
                 Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 photoPickerIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+                tvAddPhoto.setText(R.string.photo_uploaded);
+
+            case R.id.link_login:
+                StartActivity.start(this);
         }
     }
 
@@ -285,7 +301,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void createInDatabase(FirebaseUser firebaseUser) {
-        User user = new User();
+        user = new User();
 
         int selectedId = radioSexGroup.getCheckedRadioButtonId();
         radioSexButton = (RadioButton) findViewById(selectedId);
@@ -361,14 +377,16 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         return valid;
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(FirebaseUser firebaseUser) {
         hideProgressDialog();
-        if (user != null) {
+        if (firebaseUser != null) {
+            NavigationPresenter.setCurrentUser(user);
             goToBookList();
         }
     }
 
     private void goToBookList(){
+
         startActivity(BooksListActivity.makeIntent(RegistrationActivity.this));
     }
 }

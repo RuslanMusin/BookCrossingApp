@@ -7,6 +7,13 @@
 
     <color name="dialog_lender">#FF67B76A</color>
 
+   <!-- <color name="primary">#E43F3F</color>
+    <color name="primary_dark">#E12929</color>
+    <color name="primary_darker">#CC1D1D</color>
+    <color name="accent">#FFFFFF</color>
+    <color name="iron">#CCCCCC</color>-->
+
+
     <color name="primary">#F44336</color>
     <color name="primary_dark">#D32F2F</color>
     <color name="primary_light">#FFCDD2</color>

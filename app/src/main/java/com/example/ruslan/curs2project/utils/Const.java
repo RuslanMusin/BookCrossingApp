@@ -18,6 +18,9 @@ public class Const {
     public final static String TIMESTAMP_PARAM = "ts";
     public final static String HASH_PARAM = "hash";
 
+    public final static String MESSAGING_KEY = "Authorization";
+    public final static String MESSAGING_TYPE = "Content-Type";
+
     public final static Integer PAGE_SIZE = 20;
     public final static Integer ZERO_OFFSET = 0;
 
@@ -66,6 +69,11 @@ public class Const {
 
     public static final String QUERY_TYPE = "query";
     public static final String DEFAULT_TYPE = "default";
+
+    public static final String INFORMATION_TYPE = "info_type";
+    public static final String PHOTO_TYPE = "photo_type";
+    public static final String PATH_TYPE = "path_type";
+
 
     public static final int MAX_UPLOAD_RETRY_MILLIS = 60000; //1 minute
 

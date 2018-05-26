@@ -62,4 +62,10 @@
 
     </com.example.ruslan.curs2project.utils.views.ExpandableTextView>
 
+ <!--   <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/darker_gray" />-->
+
 </RelativeLayout>

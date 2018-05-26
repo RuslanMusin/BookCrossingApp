@@ -144,7 +144,11 @@ public class BookCrossingRepository {
         databaseReference.child(comment.getId()).updateChildren(updatedValues);
     }
 
-    public Single<Query> loadDefaultCrossings(String userId) {
+    public Single<Query> loadDefaultCrossings() {
+        return Single.just(databaseReference.limitToFirst(100));
+    }
+
+    public Single<Query> loadByUser(String userId) {
         return Single.just(databaseReference.getRoot().child(USER_CROSSINGS).child(userId));
     }
 
@@ -162,11 +166,8 @@ public class BookCrossingRepository {
         } else {
             String[] parts = authors.get(0).trim().split("\\s+");
             String lastPart = parts[parts.length-1];
-//            queryName = reference.startAt(book.getName(),FIELD_BOOK_NAME).endAt(lastPart,FIELD_BOOK_AUTHOR);
-            queryName = reference.orderByChild(FIELD_BOOK_NAME).startAt(bookName).endAt(bookName + QUERY_END)
-            .orderByChild(FIELD_BOOK_AUTHOR).endAt(lastPart);
-
-
+            queryName = reference.orderByChild(FIELD_BOOK_NAME).startAt(bookName).endAt(bookName + QUERY_END);
+//            queryName = queryName.orderByChild(FIELD_BOOK_AUTHOR).endAt(lastPart);
         }
         Log.d(TAG_LOG, "query is null ? " + (queryName == null));
         Log.d(TAG_LOG, "queryId is null ? " + (queryId == null));
@@ -201,9 +202,11 @@ public class BookCrossingRepository {
 
     public void addFollower(BookCrossing crossing, String userId) {
         Map<String, Object> followerValues = toMap(userId);
+        Map<String,Object> crossingValues = toMap(crossing.getId());
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(CROSSING_MEMBERS + SEP + crossing.getId() + SEP + userId,followerValues);
+        childUpdates.put(USER_CROSSINGS + SEP + userId + SEP + crossing.getId(),crossingValues);
 
         databaseReference.getRoot().updateChildren(childUpdates);
     }

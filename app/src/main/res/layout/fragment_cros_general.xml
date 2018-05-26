@@ -7,7 +7,4 @@
     <include layout="@layout/layout_crossing" />
 
    <include layout="@layout/layout_add_comment"/>
-
-
-
 </RelativeLayout>

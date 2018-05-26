@@ -3,17 +3,21 @@
 
     <item
         android:id="@+id/menu_books"
+        android:icon="@drawable/ic_book_black_24dp"
         android:title="@string/books" />
 
     <item
-        android:id="@+id/menu_book_crossing"
+        android:id="@+id/menu_crossings"
+        android:icon="@drawable/ic_group_black_24dp"
         android:title="@string/book_crossing" />
 
     <item
         android:id="@+id/menu_friends"
+        android:icon="@drawable/ic_person_black_24dp"
         android:title="@string/friends" />
 
     <item
         android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
         android:title="@string/logout" />
 </menu>

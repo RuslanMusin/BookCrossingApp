@@ -4,9 +4,13 @@ import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.example.ruslan.curs2project.api.ApiFactory;
 import com.example.ruslan.curs2project.model.BookCrossing;
 import com.example.ruslan.curs2project.model.Point;
+import com.example.ruslan.curs2project.model.pojo.Message;
 import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
+
+import io.reactivex.Single;
 
 import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
@@ -30,5 +34,12 @@ public class AddPointPresenter extends MvpPresenter<AddPointView> {
             return true;
         }
         return false;
+    }
+
+    public void sendMessage(Message message) {
+        Single<String> response = ApiFactory.getMessageService()
+                .sendMessage(message);
+
+        Log.d(TAG_LOG,"resp = " + response.subscribe(s -> s.toString()));
     }
 }

@@ -17,7 +17,13 @@
 
 package com.example.ruslan.curs2project;
 
+import android.util.Log;
+
 import com.example.ruslan.curs2project.utils.ApplicationHelper;
+
+import java.io.IOException;
+
+import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
 public class Application extends android.app.Application {
 
@@ -28,5 +34,12 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         ApplicationHelper.initDatabaseHelper(this);
+
+        try {
+            ApplicationHelper.initToken(this);
+        } catch (IOException e) {
+            Log.d(TAG_LOG,"ex when get token");
+            e.printStackTrace();
+        }
     }
 }

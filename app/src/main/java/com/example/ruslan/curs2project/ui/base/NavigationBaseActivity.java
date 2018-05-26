@@ -24,7 +24,6 @@ import com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list.Bo
 import com.example.ruslan.curs2project.ui.fragments.lists.member.member_item.PersonalActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.member.member_list.reader.ReaderListActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_list.CrossingListActivity;
-import com.example.ruslan.curs2project.utils.ImageLoadHelper;
 
 import java.util.Objects;
 
@@ -33,6 +32,9 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
     protected DrawerLayout mDrawer;
     protected NavigationView mNavigationView;
     public ProgressDialog progressDialog;
+    protected ImageView headerImage;
+
+    NavigationPresenter navigationPresenter;
 
 
     @Override
@@ -41,6 +43,7 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
         setContentView(R.layout.activity_base);
         mDrawer = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.nav_view);
+        navigationPresenter = new NavigationPresenter();
     }
 
     @Override
@@ -77,7 +80,7 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
                     startActivity(BooksListActivity.makeIntent(getApplicationContext()));
                     break;
 
-                case R.id.menu_book_crossing:
+                case R.id.menu_crossings:
                     CrossingListActivity.start(this);
                     break;
 
@@ -93,8 +96,10 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
         });
 
         View header = mNavigationView.getHeaderView(0);
-        ImageView menuCover = header.findViewById(R.id.iv_cover);
-        ImageLoadHelper.loadPictureByDrawable(menuCover, R.drawable.image_marvel_logo);
+        headerImage = header.findViewById(R.id.iv_crossing);
+//        ImageLoadHelper.loadPictureByDrawable(headerImage, R.drawable.image_marvel_logo);
+        navigationPresenter.loadUserPhoto(headerImage);
+
         setActionBar(toolbar);
     }
 

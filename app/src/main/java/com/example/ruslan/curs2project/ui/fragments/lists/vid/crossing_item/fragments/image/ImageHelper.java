@@ -6,11 +6,12 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.ruslan.curs2project.model.Point;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
-import com.google.android.gms.location.places.PlacePhotoResponse;
+import com.google.android.gms.location.places.PlacePhotoResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -39,7 +40,22 @@ public class ImageHelper {
                 // Get the attribution text.
                 CharSequence attribution = photoMetadata.getAttributions();
                 // Get a full-size bitmap for the photo.
-                Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                Integer width = imageView.getWidth() <= 0 ? imageView.getMaxWidth() : imageView.getWidth();
+                Integer height = imageView.getHeight() <= 0 ? imageView.getMaxHeight() : imageView.getHeight();
+
+                Log.d(TAG_LOG, " wid = " + width + "  heigh = " + height);
+
+                photoMetadata.getPhoto(mGeoDataClient.asGoogleApiClient()
+                        ).setResultCallback(new ResultCallback<PlacePhotoResult>() {
+                    @Override
+                    public void onResult(@NonNull PlacePhotoResult placePhotoResult) {
+                        imageView.setImageBitmap(placePhotoResult.getBitmap());
+                        photoMetadataBuffer.release();
+                    }
+                });
+
+
+                /*Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
                 photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
                     @Override
                     public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
@@ -49,8 +65,22 @@ public class ImageHelper {
                         Log.d(TAG_LOG, "bitmap  null ? " + (bitmap == null));
                         imageView.setImageBitmap(bitmap);
                     }
-                });
+                });*/
+
             }
+
+
         });
+
+
+    }
+
+    private void showItems(ImageView imageView,Bitmap bitmap) {
+        imageView.setImageBitmap(bitmap);
+    }
+
+    private void handleError(Throwable throwable) {
+        throwable.printStackTrace();
+        Log.d(TAG_LOG,throwable.getMessage());
     }
 }

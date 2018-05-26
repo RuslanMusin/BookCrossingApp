@@ -3,6 +3,8 @@
     package="com.example.ruslan.curs2project">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 
     <application
         android:name=".Application"
@@ -35,14 +37,32 @@
         <activity android:name=".ui.fragments.lists.member.member_list.member.MemberListActivity"/>
         <activity android:name=".ui.fragments.lists.member.member_list.reader.ReaderListActivity"/>
 
+        <meta-data android:name="firebase_messaging_auto_init_enabled"
+            android:value="true" />
+        <meta-data android:name="firebase_analytics_collection_enabled"
+            android:value="true" />
 
-        <!-- <meta-data
-             android:name="com.google.android.geo.API_KEY"
-             android:value="AIzaSyD_q37sWQ6pINJtcjgypw2BQ3hjwWqnfLg"/>-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_instagram_white" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <service
+            android:name=".managers.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
 
     </application>
 

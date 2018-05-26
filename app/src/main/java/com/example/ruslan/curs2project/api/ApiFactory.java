@@ -16,6 +16,9 @@ public final class ApiFactory {
 
     private static volatile BooksService booksService;
 
+    private static volatile MessageService messageService;
+
+
     private ApiFactory() {
     }
 
@@ -45,10 +48,34 @@ public final class ApiFactory {
     }
 
     @NonNull
+    public static MessageService getMessageService() {
+        MessageService service = messageService;
+        if (service == null) {
+            synchronized (ApiFactory.class) {
+                service = messageService;
+                if (service == null) {
+                    service = messageService = buildMessageRetrofit().create(MessageService.class);
+                }
+            }
+        }
+        return service;
+    }
+
+    @NonNull
     private static Retrofit buildRetrofit() {
         return new Retrofit.Builder()
                 .baseUrl(BuildConfig.API_ENDPOINT)
                 .client(OkHttpProvider.provideClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+    }
+
+    @NonNull
+    private static Retrofit buildMessageRetrofit() {
+        return new Retrofit.Builder()
+                .baseUrl(BuildConfig.MESSAGING_URL)
+                .client(OkHttpProvider.provideMessageClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();

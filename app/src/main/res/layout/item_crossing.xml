@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/iv_cover"
-        android:layout_width="@dimen/size_image_list"
-        android:layout_height="@dimen/size_image_list"
+        android:layout_width="@dimen/size_image_medium"
+        android:layout_height="@dimen/size_image_medium"
         android:layout_gravity="center_vertical"
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription"
@@ -40,6 +40,7 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin.small"
             android:fontFamily="sans-serif"
             android:textColor="@color/secondary_text"
             android:textSize="@dimen/text.14"
@@ -49,6 +50,7 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin.small"
             android:fontFamily="sans-serif"
             android:textColor="@color/secondary_text"
             android:textSize="@dimen/text.14"

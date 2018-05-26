@@ -11,6 +11,8 @@ public class OkHttpProvider {
 
     private static volatile OkHttpClient sClient;
 
+    private static volatile OkHttpClient messageClient;
+
     private OkHttpProvider() {
     }
 
@@ -28,6 +30,20 @@ public class OkHttpProvider {
         return client;
     }
 
+    @NonNull
+    public static OkHttpClient provideMessageClient() {
+        OkHttpClient client = messageClient;
+        if (client == null) {
+            synchronized (ApiFactory.class) {
+                client = messageClient;
+                if (client == null) {
+                    client = messageClient = buildMessageClient();
+                }
+            }
+        }
+        return client;
+    }
+
     public static void recreate() {
         sClient = null;
         sClient = buildClient();
@@ -35,8 +51,13 @@ public class OkHttpProvider {
 
     @NonNull
     private static OkHttpClient buildClient() {
+        return new OkHttpClient.Builder().build();
+    }
+
+    @NonNull
+    private static OkHttpClient buildMessageClient() {
         return new OkHttpClient.Builder()
-//                .addInterceptor(ApiKeyInterceptor.create())
+                .addInterceptor(ApiKeyInterceptor.create())
 //                .addInterceptor(LoggingInterceptor.create())
                 .build();
     }

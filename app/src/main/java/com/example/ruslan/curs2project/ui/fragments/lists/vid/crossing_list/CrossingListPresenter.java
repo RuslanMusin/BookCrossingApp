@@ -8,7 +8,6 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.example.ruslan.curs2project.model.Book;
 import com.example.ruslan.curs2project.model.BookCrossing;
 import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
-import com.example.ruslan.curs2project.repository.json.UserRepository;
 
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class CrossingListPresenter extends MvpPresenter<CrossingListView> {
     public void loadBooks() {
         Log.d(TAG,"load books");
         RepositoryProvider.getBookCrossingRepository()
-                .loadDefaultCrossings(UserRepository.getCurrentId())
+                .loadDefaultCrossings()
                 .doOnSubscribe(getViewState()::showLoading)
                 .doAfterTerminate(getViewState()::hideLoading)
                 .doAfterTerminate(getViewState()::setNotLoading)
@@ -61,7 +60,7 @@ public class CrossingListPresenter extends MvpPresenter<CrossingListView> {
     public void loadNextElements(int page) {
         Log.d(TAG,"load books");
         RepositoryProvider.getBookCrossingRepository()
-                .loadDefaultCrossings(UserRepository.getCurrentId())
+                .loadDefaultCrossings()
                 .doOnSubscribe(getViewState()::showLoading)
                 .doAfterTerminate(getViewState()::hideLoading)
                 .doAfterTerminate(getViewState()::setNotLoading)
@@ -79,5 +78,15 @@ public class CrossingListPresenter extends MvpPresenter<CrossingListView> {
                 .doOnSubscribe(getViewState()::showLoading)
                 .doAfterTerminate(getViewState()::hideLoading)
                 .subscribe(getViewState()::showItems, getViewState()::handleError);
+    }
+
+    @SuppressLint("CheckResult")
+    public void loadUserCrossings(String userId) {
+        RepositoryProvider.getBookCrossingRepository()
+                .loadByUser(userId)
+                .doOnSubscribe(getViewState()::showLoading)
+                .doAfterTerminate(getViewState()::hideLoading)
+                .doAfterTerminate(getViewState()::setNotLoading)
+                .subscribe(s -> getViewState().showItems(s), getViewState()::handleError);
     }
 }

@@ -20,10 +20,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.model.BookCrossing;
 import com.example.ruslan.curs2project.model.Point;
+import com.example.ruslan.curs2project.model.pojo.Message;
+import com.example.ruslan.curs2project.model.pojo.Notification;
 import com.example.ruslan.curs2project.repository.json.BookCrossingRepository;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.CrossingActivity;
+import com.example.ruslan.curs2project.utils.FormatterUtil;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -34,6 +37,7 @@ import com.google.gson.Gson;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -152,6 +156,17 @@ public class AddPointActivity extends BaseActivity implements AddPointView {
                     points.add(point);
 
                     presenter.createPoint(crossing, point);
+
+                    Message message = new Message();
+                    Notification notification = new Notification();
+                    notification.setTitle("In " + crossing.getName() + " changed date");
+                    notification.setBody("new data : " + FormatterUtil.formatFirebaseDay(new Date(date)) +
+                    " and owner : " + UserRepository.getCurrentId());
+
+                    message.setNotification(notification);
+                    message.setTo("/topics/" + crossing.getId());
+
+                    presenter.sendMessage(message);
 
                     CrossingActivity.start(AddPointActivity.this, crossing);
                 } else {

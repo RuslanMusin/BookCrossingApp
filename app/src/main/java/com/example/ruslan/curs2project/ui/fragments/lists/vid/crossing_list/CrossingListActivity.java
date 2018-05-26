@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,8 +23,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.model.Book;
 import com.example.ruslan.curs2project.model.BookCrossing;
+import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.model.db_dop_models.ElementId;
 import com.example.ruslan.curs2project.model.db_dop_models.Identified;
+import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.BaseAdapter;
 import com.example.ruslan.curs2project.ui.base.NavigationBaseActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.CrossingActivity;
@@ -44,6 +47,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.example.ruslan.curs2project.utils.Const.BOOK_KEY;
 import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
+import static com.example.ruslan.curs2project.utils.Const.USER_KEY;
 
 public class CrossingListActivity extends NavigationBaseActivity implements CrossingListView,
         BaseAdapter.OnItemClickListener<BookCrossing> {
@@ -53,6 +57,7 @@ public class CrossingListActivity extends NavigationBaseActivity implements Cros
     private ProgressBar progressBar;
     private EmptyStateRecyclerView recyclerView;
     private TextView tvEmpty;
+    private CheckBox cbShowCrossings;
 
     private CrossingAdapter adapter;
 
@@ -63,6 +68,8 @@ public class CrossingListActivity extends NavigationBaseActivity implements Cros
 
    private Book book;
 
+   private String userId;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +79,16 @@ public class CrossingListActivity extends NavigationBaseActivity implements Cros
         initRecycler();
 
         String bookJson = getIntent().getStringExtra(BOOK_KEY);
+        Gson gson = new Gson();
         if(bookJson != null) {
-            book = new Gson().fromJson(bookJson,Book.class);
+            book = gson.fromJson(bookJson,Book.class);
+        }
+
+        String userJson = getIntent().getStringExtra(USER_KEY);
+        if(userJson != null) {
+            userId = gson.fromJson(userJson,User.class).getId();
+        } else {
+            userId = UserRepository.getCurrentId();
         }
     }
 
@@ -87,6 +102,13 @@ public class CrossingListActivity extends NavigationBaseActivity implements Cros
         Intent intent = new Intent(activity, CrossingListActivity.class);
         String bookJson = new Gson().toJson(book);
         intent.putExtra(BOOK_KEY,bookJson);
+        activity.startActivity(intent);
+    }
+
+    public static void start(@NonNull Activity activity, @NonNull User user) {
+        Intent intent = new Intent(activity, CrossingListActivity.class);
+        String userJson = new Gson().toJson(user);
+        intent.putExtra(USER_KEY,userJson);
         activity.startActivity(intent);
     }
 
@@ -243,7 +265,11 @@ public class CrossingListActivity extends NavigationBaseActivity implements Cros
     public void loadWay() {
         if(book == null){
             presenter.loadBooks();
-        } else {
+        } else if(!userId.equals(UserRepository.getCurrentId())) {
+            presenter.loadUserCrossings(userId);
+            cbShowCrossings.setChecked(true);
+        }
+        else {
             presenter.loadBooksByBook(book);
         }
     }
@@ -287,6 +313,20 @@ public class CrossingListActivity extends NavigationBaseActivity implements Cros
         progressBar = findViewById(R.id.pg_comics_list);
         recyclerView = findViewById(R.id.rv_comics_list);
         tvEmpty = findViewById(R.id.tv_empty);
+        cbShowCrossings = findViewById(R.id.cb_show_my_crossings);
+
+        cbShowCrossings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox) v;
+                if(checkBox.isChecked()) {
+                    presenter.loadUserCrossings(userId);
+                } else {
+                    presenter.loadBooks();
+                }
+            }
+        });
+
 
     }
 

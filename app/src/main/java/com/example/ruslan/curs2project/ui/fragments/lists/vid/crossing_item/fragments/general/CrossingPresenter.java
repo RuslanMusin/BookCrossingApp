@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
@@ -123,9 +124,14 @@ public class CrossingPresenter extends MvpPresenter<CrossingView> {
 
     public void addFollower(BookCrossing crossing, String userId) {
         crossingRepository.addFollower(crossing, userId);
+
+        FirebaseMessaging.getInstance().subscribeToTopic(crossing.getId());
+
     }
 
     public void removeFollower(BookCrossing crossing, String userId) {
         crossingRepository.removeFollower(crossing, userId);
+
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(crossing.getId());
     }
 }

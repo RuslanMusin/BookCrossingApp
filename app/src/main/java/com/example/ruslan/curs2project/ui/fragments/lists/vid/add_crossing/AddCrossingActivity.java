@@ -30,6 +30,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -175,6 +176,9 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
                 bookCrossing.setPoints(points);
 
                 crossingRepository.createCrossing(bookCrossing, UserRepository.getCurrentId());
+
+                FirebaseMessaging.getInstance().subscribeToTopic(bookCrossing.getId());
+
 
                 CrossingActivity.start(AddCrossingActivity.this,bookCrossing);
 

@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +43,7 @@ import com.example.ruslan.curs2project.ui.fragments.lists.vid.add_crossing.AddCr
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.CommentsAdapter;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_list.CrossingListActivity;
 import com.example.ruslan.curs2project.utils.ImageLoadHelper;
+import com.example.ruslan.curs2project.utils.views.ExpandableTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -66,24 +66,17 @@ import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 /**
  * Created by Nail Shaykhraziev on 25.02.2018.
  */
-public class BookActivity extends NavigationBaseActivity implements BookView,View.OnClickListener,EditCommentDialog.CommentDialogCallback {
+public class BookActivity extends NavigationBaseActivity implements BookView,EditCommentDialog.CommentDialogCallback {
 
     private static final String TAG = "BaseAcivity";
     private CollapsingToolbarLayout collapsingToolbar;
     private Toolbar toolbar;
     private ImageView ivCover;
-    private TextView tvName;
     private TextView tvAuthors;
-    private TextView tvDescription;
+    private ExpandableTextView tvDescription;
     private TextView tvMark;
 
     private TextView namedTextView;
-
-
-    private AppCompatButton btnAddCrossing;
-    private AppCompatButton btnFindCrossing;
-
-
 
     private CommentAdapter adapter;
 
@@ -237,7 +230,6 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Vie
     public void setBookData(Book book){
         Log.d(TAG_LOG,"set book data presenter");
 
-        tvName.setText(book.getName());
         setAuthors(book.getAuthors());
         tvDescription.setText(book.getDesc());
         tvMark.setText(String.valueOf(book.getMark()));
@@ -268,19 +260,14 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Vie
         supportActionBar(toolbar);
 //        setBackArrow(toolbar);
 
-        btnAddCrossing.setOnClickListener(this);
-        btnFindCrossing.setOnClickListener(this);
     }
 
     private void findViews() {
         toolbar = findViewById(R.id.toolbar);
         ivCover = findViewById(R.id.iv_crossing);
-        tvName = findViewById(R.id.tv_name);
         tvAuthors = findViewById(R.id.tv_authors);
         tvMark = findViewById(R.id.tv_mark);
-        tvDescription = findViewById(R.id.tv_desc);
-        btnAddCrossing = findViewById(R.id.btn_add_crossing);
-        btnFindCrossing = findViewById(R.id.btn_find_crossing);
+        tvDescription = findViewById(R.id.extv_desc);
 
         namedTextView = findViewById(R.id.nameEditText);
 
@@ -344,21 +331,6 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Vie
                 }
             }
         });
-    }
-
-
-    @Override
-    public void onClick(View v) {
-      switch (v.getId()){
-
-          case R.id.btn_add_crossing:
-              AddCrossingActivity.start(this,book);
-              break;
-
-          case R.id.btn_find_crossing:
-              CrossingListActivity.start(this,book);
-              break;
-      }
     }
 
     //comment

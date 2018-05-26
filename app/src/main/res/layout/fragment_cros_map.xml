@@ -4,8 +4,17 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/spinner"
+        ms_background_color="@color/primary"
+        ms_text_color="@color/white"
+        android:text="@string/select_marker_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <FrameLayout
         android:id="@+id/map"
+        android:layout_below="@id/spinner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
