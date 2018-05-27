@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_above="@id/li_comment"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
     <LinearLayout
@@ -31,6 +31,7 @@
         <RelativeLayout
             android:id="@+id/profileInfo"
             android:layout_width="match_parent"
+            android:minHeight="120dp"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/intrinsic_padding"
             android:paddingRight="@dimen/intrinsic_padding"
@@ -141,6 +142,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin.normal"
             android:orientation="horizontal">
 
             <ImageView
@@ -162,29 +164,6 @@
             android:textSize="@dimen/text.16" />
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin.normal"
-            android:text="@string/username"
-            android:textColor="@color/primary_text"
-            android:textSize="@dimen/text.16" />
-
-        <TextView
-            android:id="@+id/tv_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin.small"
-            android:layout_marginBottom="@dimen/margin.small"
-            android:textColor="@color/secondary_text"
-            android:textSize="@dimen/text.14"
-            tools:text="Description" />
 
         <View
             android:layout_width="match_parent"
@@ -261,6 +240,7 @@
             android:background="@android:color/darker_gray"/>
 
         <TextView
+            android:id="@+id/tv_desc_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin.normal"
@@ -277,15 +257,38 @@
             expandableTextView:expandText="@string/expand_text_label"
             expandableTextView:maxCollapsedLines="3">
 
-        <TextView
-            android:id="@+id/expand_collapse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin.small"
-            android:layout_marginBottom="@dimen/margin.small"
-            android:textColor="@color/secondary_text"
-            android:textSize="@dimen/text.14"
-            tools:text="34"/>
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:ellipsize="end"
+                android:textAppearance="@style/TextAppearance.Second" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/small_intrinsic_padding">
+
+                <TextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="day ago"
+                    android:textAppearance="@style/TextAppearance.Second.Light" />
+
+                <TextView
+                    android:id="@+id/expand_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:autoLink="web"
+                    android:textAppearance="@style/TextAppearance.Second.Light" />
+
+            </RelativeLayout>
+
         </com.example.ruslan.curs2project.utils.views.ExpandableTextView>
 
         <ProgressBar

@@ -167,6 +167,7 @@
             tools:text="Mark"/>
 
         <TextView
+            android:id="@+id/tv_desc_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin.large"
@@ -183,16 +184,29 @@
             expandableTextView:expandText="@string/expand_text_label"
             expandableTextView:maxCollapsedLines="3">
 
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:ellipsize="end"
+                android:textAppearance="@style/TextAppearance.Second" />
 
-        <TextView
-            android:id="@+id/expand_collapse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin.small"
-            android:layout_marginBottom="@dimen/margin.small"
-            android:textColor="@color/secondary_text"
-            android:textSize="@dimen/text.14"
-            tools:text="Desc"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/small_intrinsic_padding">
+
+                <TextView
+                    android:id="@+id/expand_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:autoLink="web"
+                    android:textAppearance="@style/TextAppearance.Second.Light" />
+
+            </RelativeLayout>
 
         </com.example.ruslan.curs2project.utils.views.ExpandableTextView>
 

@@ -8,20 +8,14 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Nail Shaykhraziev on 24.02.2018.
- */
-
 public final class ApiFactory {
 
     private static volatile BooksService booksService;
 
     private static volatile MessageService messageService;
 
-
     private ApiFactory() {
     }
-
 
     @NonNull
     public static BooksService getBooksService() {

@@ -21,7 +21,7 @@ import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.model.Book;
 import com.example.ruslan.curs2project.model.BookCrossing;
 import com.example.ruslan.curs2project.model.Point;
-import com.example.ruslan.curs2project.repository.json.BookCrossingRepository;
+import com.example.ruslan.curs2project.repository.RepositoryProvider;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.CrossingActivity;
@@ -48,7 +48,6 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
     int PLACE_PICKER_REQUEST = 1;
 
     private Toolbar toolbar;
-
     private TextInputLayout tiPhrase;
     private TextInputLayout tiTitle;
     private TextInputLayout tiDescription;
@@ -64,25 +63,14 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
     @InjectPresenter
     AddCrossingPresenter presenter;
 
-    private String bookId;
-    private String bookName;
-    private String bookPhoto;
-
-
     private Place place;
-
     private Book book;
-
-    private BookCrossingRepository crossingRepository = new BookCrossingRepository();
 
     String myFormat = "dd.MM.yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
     public static void start(@NonNull Activity activity, @NonNull Book comics) {
         Intent intent = new Intent(activity, AddCrossingActivity.class);
-       /* intent.putExtra(NAME_KEY, comics.getName());
-        intent.putExtra(PHOTO_KEY, comics.getPhotoUrl());
-        intent.putExtra(ID_KEY, comics.getId());*/
         Gson gson = new Gson();
         String bookJson = gson.toJson(comics);
         intent.putExtra(BOOK_KEY,bookJson);
@@ -96,14 +84,6 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
         initViews();
         String bookJson = getIntent().getStringExtra(BOOK_KEY);
         book = new Gson().fromJson(bookJson,Book.class);
-        if(book != null) {
-            /*bookId = getIntent().getStringExtra(ID_KEY);
-            bookName = getIntent().getStringExtra(NAME_KEY);
-            bookPhoto = getIntent().getStringExtra(PHOTO_KEY);*/
-            bookId = book.getId();
-            bookName = book.getName();
-            bookPhoto = book.getPhotoUrl();
-        }
     }
 
     private void initViews() {
@@ -151,11 +131,10 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
                     e.printStackTrace();
                 }
 
-
                 BookCrossing bookCrossing = new BookCrossing();
-                bookCrossing.setBookId(bookId);
-                bookCrossing.setBookName(bookName);
-                bookCrossing.setBookPhoto(bookPhoto);
+                bookCrossing.setBookId(book.getId());
+                bookCrossing.setBookName(book.getName());
+                bookCrossing.setBookPhoto(book.getPhotoUrl());
                 bookCrossing.setBookAuthor(book.getAuthors().get(0));
                 bookCrossing.setDate(date);
                 bookCrossing.setKeyPhrase(key);
@@ -175,10 +154,9 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
 
                 bookCrossing.setPoints(points);
 
-                crossingRepository.createCrossing(bookCrossing, UserRepository.getCurrentId());
+                RepositoryProvider.getBookCrossingRepository().createCrossing(bookCrossing, UserRepository.getCurrentId());
 
                 FirebaseMessaging.getInstance().subscribeToTopic(bookCrossing.getId());
-
 
                 CrossingActivity.start(AddCrossingActivity.this,bookCrossing);
 
@@ -223,7 +201,6 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -236,7 +213,6 @@ public class AddCrossingActivity extends BaseActivity implements AddCrossingView
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 new DatePickerDialog(AddCrossingActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();

@@ -16,13 +16,27 @@
 
 package com.example.ruslan.curs2project.utils;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.example.ruslan.curs2project.Application;
 import com.example.ruslan.curs2project.managers.DatabaseHelper;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.example.ruslan.curs2project.model.User;
+import com.example.ruslan.curs2project.repository.RepositoryProvider;
+import com.example.ruslan.curs2project.repository.json.UserRepository;
+import com.example.ruslan.curs2project.ui.base.NavigationPresenter;
+import com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list.BooksListActivity;
+import com.example.ruslan.curs2project.ui.start.login.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
+import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
 /**
  * Created by Kristina on 10/28/16.
@@ -33,8 +47,6 @@ public class ApplicationHelper {
     private static final String TAG = ApplicationHelper.class.getSimpleName();
     private static DatabaseHelper databaseHelper;
 
-    private static GoogleCredential googleCredential;
-
     public static DatabaseHelper getDatabaseHelper() {
         return databaseHelper;
     }
@@ -44,17 +56,38 @@ public class ApplicationHelper {
         databaseHelper.init();
     }
 
-    public static void initToken(Application application) throws IOException {
-        InputStream stream = application.getResources().getAssets().open("curs2project-firebase-adminsdk-2oldz-8cad1b8e78.json");
-
-        googleCredential = GoogleCredential
-            .fromStream(stream)
-            .createScoped(Arrays.asList("https://www.googleapis.com/auth/firebase.messaging"));
-
-
+    public static StorageReference getStorageReference(){
+        return FirebaseStorage.getInstance().getReference();
     }
 
-    public static GoogleCredential getCredential() {
-        return googleCredential;
+
+    public static void initUserState(Application application) {
+        FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    Log.d(TAG_LOG,"logout");
+                    LoginActivity.start(application);
+                } else {
+                    Log.d(TAG_LOG,"try to login");
+                    DatabaseReference reference = RepositoryProvider.getUserRepository().readUser(UserRepository.getCurrentId());
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User user = dataSnapshot.getValue(User.class);
+                            NavigationPresenter.setCurrentUser(user);
+                            BooksListActivity.start(application.getApplicationContext());
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        };
     }
 }

@@ -171,7 +171,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(ProfileActivity.this, StartActivity.class);
+        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

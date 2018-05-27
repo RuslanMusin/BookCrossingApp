@@ -7,7 +7,7 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.ruslan.curs2project.model.Book;
 import com.example.ruslan.curs2project.model.BookCrossing;
-import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
+import com.example.ruslan.curs2project.repository.RepositoryProvider;
 
 import java.util.List;
 

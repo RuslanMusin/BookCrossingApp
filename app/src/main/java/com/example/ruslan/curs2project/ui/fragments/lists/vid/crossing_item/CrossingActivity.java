@@ -49,7 +49,7 @@ public class CrossingActivity extends NavigationBaseActivity implements MapView 
     MapPresenter presenter;
 
     private int[] tabIcons = {
-            R.drawable.ic_group_black_24dp,
+            R.drawable.ic_book_white_24dp,
             R.drawable.ic_place_white,
             R.drawable.ic_instagram_white
     };

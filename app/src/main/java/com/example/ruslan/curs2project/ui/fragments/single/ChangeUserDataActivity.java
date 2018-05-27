@@ -13,7 +13,6 @@ import android.widget.ImageView;
 
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
-import com.example.ruslan.curs2project.ui.fragments.lists.member.member_item.PersonalActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ChangeUserDataActivity  extends BaseActivity implements View.OnClickListener {
@@ -85,6 +84,6 @@ public class ChangeUserDataActivity  extends BaseActivity implements View.OnClic
         String username = etCity.getText().toString();
         String city = etCity.getText().toString();
         String desc = etDesc.getText().toString();
-        startActivity(PersonalActivity.makeIntent(ChangeUserDataActivity.this));
+//        startActivity(PersonalActivity.makeIntent(ChangeUserDataActivity.this));
     }
 }

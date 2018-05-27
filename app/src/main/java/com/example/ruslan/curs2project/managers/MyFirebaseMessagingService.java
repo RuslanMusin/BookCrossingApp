@@ -24,7 +24,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.ruslan.curs2project.R;
-import com.example.ruslan.curs2project.ui.StartActivity;
+import com.example.ruslan.curs2project.ui.start.login.LoginActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -65,7 +65,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
 
-        Intent intent = new Intent(this,  StartActivity.class);
+        Intent intent = new Intent(this,  LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);

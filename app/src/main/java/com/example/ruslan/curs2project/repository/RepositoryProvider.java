@@ -1,17 +1,16 @@
-package com.example.ruslan.curs2project.repository.api;
+package com.example.ruslan.curs2project.repository;
 
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
+import com.example.ruslan.curs2project.repository.api.BookApiRepository;
+import com.example.ruslan.curs2project.repository.api.BookApiRepositoryImpl;
 import com.example.ruslan.curs2project.repository.json.BookCommentRepository;
 import com.example.ruslan.curs2project.repository.json.BookCrossingRepository;
 import com.example.ruslan.curs2project.repository.json.CrossingCommentRepository;
 import com.example.ruslan.curs2project.repository.json.PointRepository;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
 
-/**
- * Created by Nail Shaykhraziev on 07.03.2018.
- */
 public class RepositoryProvider {
 
     private static UserRepository userRepository;

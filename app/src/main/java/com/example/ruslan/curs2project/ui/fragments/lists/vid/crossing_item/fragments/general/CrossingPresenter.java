@@ -7,7 +7,7 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.ruslan.curs2project.model.BookCrossing;
-import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
+import com.example.ruslan.curs2project.repository.RepositoryProvider;
 import com.example.ruslan.curs2project.repository.json.BookCrossingRepository;
 import com.example.ruslan.curs2project.repository.json.CrossingMembersRepository;
 import com.google.firebase.database.DataSnapshot;
@@ -101,7 +101,7 @@ public class CrossingPresenter extends MvpPresenter<CrossingView> {
    /* @SuppressLint("CheckResult")
     public void loadNextComments(int page, String bookId) {
         RepositoryProvider.getCrossingCommentRepository(bookId)
-                .getComments(page * PAGE_SIZE, PAGE_SIZE, DEFAULT_COMICS_SORT)
+                .getComments(page * PAGE_SIZE, PAGE_SIZE, DEFAULT_BOOK_SORT)
                 .doOnSubscribe(getViewState()::showLoading)
                 .doAfterTerminate(getViewState()::hideLoading)
                 .doAfterTerminate(getViewState()::setNotLoading)
@@ -111,7 +111,7 @@ public class CrossingPresenter extends MvpPresenter<CrossingView> {
     @SuppressLint("CheckResult")
     public void loadComments(String bookId) {
         RepositoryProvider.getCrossingCommentRepository(bookId)
-                .getComments(ZERO_OFFSET, PAGE_SIZE, DEFAULT_COMICS_SORT)
+                .getComments(ZERO_OFFSET, PAGE_SIZE, DEFAULT_BOOK_SORT)
                 .doOnSubscribe(getViewState()::showLoading)
                 .doAfterTerminate(getViewState()::hideLoading)
                 .doAfterTerminate(getViewState()::setNotLoading)

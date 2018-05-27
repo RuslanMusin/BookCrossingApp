@@ -47,8 +47,6 @@ public class BooksItemHolder extends RecyclerView.ViewHolder {
             description.setText(imageView.getContext().getText(R.string.description_default));
         }
         if (item.getPhotoUrl() != null) {
-            /*ImageLoadHelper.loadPicture(imageView, String.format("%s.%s", item.getPhotoUrl(),
-                    item.getPhotoUrl().getExtension()));*/
             if(item.getPhotoUrl().equals(String.valueOf(R.drawable.book_default))) {
                 ImageLoadHelper.loadPictureByDrawableDefault(imageView,R.drawable.book_default);
             } else {

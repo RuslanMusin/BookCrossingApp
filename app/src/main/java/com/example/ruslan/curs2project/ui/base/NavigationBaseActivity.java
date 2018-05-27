@@ -3,7 +3,6 @@ package com.example.ruslan.curs2project.ui.base;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -24,8 +24,12 @@ import com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list.Bo
 import com.example.ruslan.curs2project.ui.fragments.lists.member.member_item.PersonalActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.member.member_list.reader.ReaderListActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_list.CrossingListActivity;
+import com.example.ruslan.curs2project.ui.start.SettingsActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
+
+import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
 public class NavigationBaseActivity extends MvpAppCompatActivity {
 
@@ -74,10 +78,9 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
     private void initNavigationDrawer(Toolbar toolbar) {
         mNavigationView.setNavigationItemSelectedListener(menuItem -> {
             int id = menuItem.getItemId();
-            Intent intent;
             switch (id) {
                 case R.id.menu_books:
-                    startActivity(BooksListActivity.makeIntent(getApplicationContext()));
+                    BooksListActivity.start(this);
                     break;
 
                 case R.id.menu_crossings:
@@ -88,8 +91,13 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
                     ReaderListActivity.start(this);
                     break;
 
+                case R.id.menu_settings:
+                    SettingsActivity.start(this);
+                    break;
+
                 case R.id.menu_logout:
-                    PersonalActivity.start(this);
+                    FirebaseAuth.getInstance().signOut();
+//                    LoginActivity.start(this);
                     break;
             }
             return true;
@@ -97,8 +105,14 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
 
         View header = mNavigationView.getHeaderView(0);
         headerImage = header.findViewById(R.id.iv_crossing);
-//        ImageLoadHelper.loadPictureByDrawable(headerImage, R.drawable.image_marvel_logo);
         navigationPresenter.loadUserPhoto(headerImage);
+
+        headerImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersonalActivity.start(NavigationBaseActivity.this);
+            }
+        });
 
         setActionBar(toolbar);
     }
@@ -108,6 +122,19 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
                 R.string.drawer_open, R.string.drawer_close);
         mDrawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+
+        mNavigationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mDrawer.isDrawerOpen(mDrawer)) {
+                    Log.d(TAG_LOG,"close");
+                    mDrawer.closeDrawer(mDrawer);
+                } else {
+                    Log.d(TAG_LOG,"open");
+                    mDrawer.openDrawer(mDrawer);
+                }
+            }
+        });
     }
 
     public void showProgress() {

@@ -9,7 +9,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_add"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:icon="@drawable/ic_group_add_black_24dp"
         android:orderInCategory="3"
         android:title="@string/delete_comment_menu_item"
         app:showAsAction="ifRoom" />

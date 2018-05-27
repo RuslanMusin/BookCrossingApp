@@ -14,8 +14,10 @@ import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.model.BookCrossing;
 import com.example.ruslan.curs2project.model.Point;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.CrossingActivity;
+import com.example.ruslan.curs2project.utils.FormatterUtil;
 import com.google.android.gms.location.places.Places;
 
+import java.util.Date;
 import java.util.List;
 
 public class PhotoFragment extends Fragment {
@@ -59,7 +61,10 @@ public class PhotoFragment extends Fragment {
 
 //                ImageActivity.start(PhotoFragment.this.getActivity(),points.get(position));
 
-                imageHelper.getPhotos(selectedImage,points.get(position));
+                Point point = points.get(position);
+
+                imageHelper.getPhotos(selectedImage,point);
+                dialog.setTitle(FormatterUtil.formatFirebaseDay(new Date(point.getDate())));
 
                 dialog.show();
 

@@ -201,5 +201,7 @@
     <string name="show_photo">Отобразить фото</string>
     <string name="show_path">Показать путь до метки</string>
     <string name="person_place">Это ваше расположение</string>
+    <string name="settings">Настройки</string>
+    <string name="send_notif_setting">Оповещать об изменениях в crossings</string>
 
 </resources>

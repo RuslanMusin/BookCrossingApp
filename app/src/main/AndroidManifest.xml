@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.StartActivity">
+        <activity android:name=".ui.start.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +23,7 @@
         </activity>
 
         <activity android:name=".ui.base.NavigationBaseActivity"/>
-        <activity android:name=".ui.fragments.single.RegistrationActivity"/>
+        <activity android:name=".ui.start.registration.RegistrationActivity"/>
         <activity android:name=".ui.fragments.lists.member.member_item.PersonalActivity"/>
 
         <activity android:name=".ui.fragments.lists.book.main_book_list.BooksListActivity"/>
@@ -36,6 +36,9 @@
         <activity android:name=".ui.fragments.lists.vid.add_point.AddPointActivity"/>
         <activity android:name=".ui.fragments.lists.member.member_list.member.MemberListActivity"/>
         <activity android:name=".ui.fragments.lists.member.member_list.reader.ReaderListActivity"/>
+
+        <activity android:name=".ui.start.SettingsActivity"/>
+
 
         <meta-data android:name="firebase_messaging_auto_init_enabled"
             android:value="true" />

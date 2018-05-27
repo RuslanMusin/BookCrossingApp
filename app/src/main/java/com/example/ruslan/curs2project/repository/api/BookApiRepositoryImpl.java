@@ -59,11 +59,7 @@ public class BookApiRepositoryImpl implements BookApiRepository {
 
         for(GBook GBook : booksApi){
             books.add(convert(GBook));
-            Log.d(TAG,"convert");
         }
-
-
-        Log.d(TAG,"book convert finished");
         return books;
     }
 
@@ -72,9 +68,6 @@ public class BookApiRepositoryImpl implements BookApiRepository {
         book.setId(gBook.getId());
 
         VolumeInfo vInfo = gBook.getVolumeInfo();
-
-        Log.d(TAG, "book info = " + book.getId() + " " + vInfo.getTitle() + "|| " + vInfo.getDescription());
-        Log.d(TAG, "authors = " + book.getAuthors());
 
         book.setName(vInfo.getTitle());
 
@@ -93,21 +86,10 @@ public class BookApiRepositoryImpl implements BookApiRepository {
 
         ImageLinks imageLinks = vInfo.getImageLinks();
         if (imageLinks != null) {
-            Log.d(TAG, "link = " + vInfo.getImageLinks().getThumbnail());
             book.setPhotoUrl(imageLinks.getThumbnail());
         } else {
-            Log.d(TAG, "link = null");
             book.setPhotoUrl(String.valueOf(R.drawable.book_default));
         }
-
-
-        /*book.publishedDate = vInfo.getPublishedDate();
-        book.pageCount = vInfo.getPageCount();
-        book.smallThumbnail = imageLinks.getSmallThumbnail();
-        book.subtitle = vInfo.getSubtitle();
-        book.publisher = vInfo.getPublisher();
-
-*/
 
         return book;
     }

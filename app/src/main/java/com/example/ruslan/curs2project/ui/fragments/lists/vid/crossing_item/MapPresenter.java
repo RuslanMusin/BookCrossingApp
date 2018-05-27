@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
+import com.example.ruslan.curs2project.repository.RepositoryProvider;
 
 @InjectViewState
 public class MapPresenter extends MvpPresenter<MapView> {

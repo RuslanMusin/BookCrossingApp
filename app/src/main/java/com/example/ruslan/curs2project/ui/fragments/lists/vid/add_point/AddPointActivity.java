@@ -20,13 +20,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.model.BookCrossing;
 import com.example.ruslan.curs2project.model.Point;
-import com.example.ruslan.curs2project.model.pojo.Message;
-import com.example.ruslan.curs2project.model.pojo.Notification;
-import com.example.ruslan.curs2project.repository.json.BookCrossingRepository;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.CrossingActivity;
-import com.example.ruslan.curs2project.utils.FormatterUtil;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -37,7 +33,6 @@ import com.google.gson.Gson;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,7 +44,6 @@ public class AddPointActivity extends BaseActivity implements AddPointView {
     int PLACE_PICKER_REQUEST = 1;
 
     private Toolbar toolbar;
-
     private TextInputLayout tiPhrase;
     private TextInputLayout tiTitle;
     private TextInputLayout tiDescription;
@@ -65,10 +59,7 @@ public class AddPointActivity extends BaseActivity implements AddPointView {
     AddPointPresenter presenter;
 
     private Place place;
-
     private BookCrossing crossing;
-
-    private BookCrossingRepository crossingRepository = new BookCrossingRepository();
 
     String myFormat = "dd.MM.yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
@@ -156,17 +147,7 @@ public class AddPointActivity extends BaseActivity implements AddPointView {
                     points.add(point);
 
                     presenter.createPoint(crossing, point);
-
-                    Message message = new Message();
-                    Notification notification = new Notification();
-                    notification.setTitle("In " + crossing.getName() + " changed date");
-                    notification.setBody("new data : " + FormatterUtil.formatFirebaseDay(new Date(date)) +
-                    " and owner : " + UserRepository.getCurrentId());
-
-                    message.setNotification(notification);
-                    message.setTo("/topics/" + crossing.getId());
-
-                    presenter.sendMessage(message);
+                    presenter.sendMessage(crossing);
 
                     CrossingActivity.start(AddPointActivity.this, crossing);
                 } else {
@@ -214,7 +195,6 @@ public class AddPointActivity extends BaseActivity implements AddPointView {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -227,7 +207,6 @@ public class AddPointActivity extends BaseActivity implements AddPointView {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 new DatePickerDialog(AddPointActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();

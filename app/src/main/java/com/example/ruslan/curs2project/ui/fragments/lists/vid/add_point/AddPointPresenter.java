@@ -8,7 +8,12 @@ import com.example.ruslan.curs2project.api.ApiFactory;
 import com.example.ruslan.curs2project.model.BookCrossing;
 import com.example.ruslan.curs2project.model.Point;
 import com.example.ruslan.curs2project.model.pojo.Message;
-import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
+import com.example.ruslan.curs2project.model.pojo.Notification;
+import com.example.ruslan.curs2project.repository.RepositoryProvider;
+import com.example.ruslan.curs2project.repository.json.UserRepository;
+import com.example.ruslan.curs2project.utils.FormatterUtil;
+
+import java.util.Date;
 
 import io.reactivex.Single;
 
@@ -36,7 +41,16 @@ public class AddPointPresenter extends MvpPresenter<AddPointView> {
         return false;
     }
 
-    public void sendMessage(Message message) {
+    public void sendMessage(BookCrossing crossing) {
+        Message message = new Message();
+        Notification notification = new Notification();
+        notification.setTitle("In " + crossing.getName() + " changed date");
+        notification.setBody("new data : " + FormatterUtil.formatFirebaseDay(new Date(crossing.getDate())) +
+                " and owner : " + UserRepository.getCurrentId());
+
+        message.setNotification(notification);
+        message.setTo("/topics/" + crossing.getId());
+
         Single<String> response = ApiFactory.getMessageService()
                 .sendMessage(message);
 

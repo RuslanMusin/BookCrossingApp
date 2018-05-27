@@ -20,26 +20,10 @@ public class NavigationPresenter {
     }
 
     public void loadUserPhoto(ImageView photoView) {
-//        DatabaseReference reference = UserRepository.readUser(UserRepository.getCurrentId());
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(currentUser.getPhotoUrl());
 
         Glide.with(photoView.getContext())
                 .load(storageReference)
                 .into(photoView);
-        /*reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(user.getPhotoUrl());
-                Glide.with(photoView.getContext())
-                        .load(storageReference)
-                        .into(photoView);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
     }
 }

@@ -49,7 +49,7 @@
 
     <dimen name="profile_photo_side">150dp</dimen>
 
-    <dimen name="profile_screen_avatar_size">110dp</dimen>
+    <dimen name="profile_screen_avatar_size">100dp</dimen>
 
     <dimen name="profile_screen_margin_top_progress_bar">120dp</dimen>
 
@@ -57,7 +57,7 @@
     <dimen name="profile_screen_avatar_right_margin">24dp</dimen>
 
     <!--post card content_padding left = card_elevation + card_padding-->
-    <dimen name="post_card_content_padding_left">11dp</dimen>
+    <dimen name="post_card_content_padding_left">90dp</dimen>
 
     <dimen name="post_counter_radius">16dp</dimen>
 

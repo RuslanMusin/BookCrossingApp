@@ -6,7 +6,7 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.ruslan.curs2project.model.Book;
-import com.example.ruslan.curs2project.repository.api.RepositoryProvider;
+import com.example.ruslan.curs2project.repository.RepositoryProvider;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -21,7 +21,6 @@ public class BooksListPresenter extends MvpPresenter<BooksListView> {
         super.onFirstViewAttach();
         loadBooks();
     }
-
 
     @SuppressLint("CheckResult")
     public void loadBooksByQuery(String query) {
@@ -45,22 +44,16 @@ public class BooksListPresenter extends MvpPresenter<BooksListView> {
 
     @SuppressLint("CheckResult")
     public void loadNextElements(int page) {
-        Log.d(TAG,"load books");
+        Log.d(TAG, "load books");
         RepositoryProvider.getBookApiRepository()
                 .loadDefaultBooks()
                 .doOnSubscribe(getViewState()::showLoading)
                 .doAfterTerminate(getViewState()::hideLoading)
                 .doAfterTerminate(getViewState()::setNotLoading)
                 .subscribe(getViewState()::showItems, getViewState()::handleError);
-       /* RepositoryProvider.getBookApiRepository()
-                .comics(page * PAGE_SIZE, PAGE_SIZE, DEFAULT_COMICS_SORT)
-                .doOnSubscribe(getViewState()::showLoading)
-                .doAfterTerminate(getViewState()::hideLoading)
-                .doAfterTerminate(getViewState()::setNotLoading)
-                .subscribe(getViewState()::addMoreItems, getViewState()::handleError);*/
     }
 
-    public void onItemClick(Book comics) {
-        getViewState().showDetails(comics);
+    public void onItemClick(Book book) {
+        getViewState().showDetails(book);
     }
 }

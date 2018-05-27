@@ -1,5 +1,6 @@
 package com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,19 @@ public class BooksListActivity extends NavigationBaseActivity implements BooksLi
     BooksListPresenter presenter;
 
     private boolean isLoading = false;
+    private String lastQuery;
+
+    public static void start(@NonNull Activity activity) {
+        Intent intent = new Intent(activity, BooksListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+    }
+
+    public static void start(@NonNull Context activity) {
+        Intent intent = new Intent(activity, BooksListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,11 +70,48 @@ public class BooksListActivity extends NavigationBaseActivity implements BooksLi
         initRecycler();
     }
 
-    @NonNull
-    public static Intent makeIntent(@NonNull Context context) {
-        Intent intent = new Intent(context, BooksListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        return intent;
+    private void initViews() {
+        toolbar = findViewById(R.id.tb_books_list);
+        supportActionBar(toolbar);
+        progressBar = findViewById(R.id.pg_comics_list);
+        recyclerView = findViewById(R.id.rv_comics_list);
+        tvEmpty = findViewById(R.id.tv_empty);
+
+    }
+
+    private void initRecycler() {
+        adapter = new BooksAdapter(new ArrayList<>());
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setEmptyView(tvEmpty);
+        adapter.attachToRecyclerView(recyclerView);
+        adapter.setOnItemClickListener(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private int currentPage = 0;
+            private boolean isLastPage = false;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                /*int visibleItemCount = manager.getChildCount();
+                int totalItemCount = manager.getItemCount();
+                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0
+                            && totalItemCount >= 20) {
+                        isLoading = true;
+                        if(lastQuery == null) {
+                            presenter.loadBooks(++currentPage);
+                        } else {
+                            presenter.loadBooksByQuery(lastQuery,++currentPage);
+                        }
+                    }
+                }*/
+            }
+        });
     }
 
     @Override
@@ -103,49 +154,6 @@ public class BooksListActivity extends NavigationBaseActivity implements BooksLi
         BookActivity.start(this, item);
     }
 
-
-    private void initRecycler() {
-        adapter = new BooksAdapter(new ArrayList<>());
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setEmptyView(tvEmpty);
-        adapter.attachToRecyclerView(recyclerView);
-        adapter.setOnItemClickListener(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            private int currentPage = 0;
-            // обычно бывает флаг последней страницы, но я че т его не нашел, если не найдется, то можно удалить, всегда тру
-            private boolean isLastPage = false;
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int visibleItemCount = manager.getChildCount();
-                int totalItemCount = manager.getItemCount();
-                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
-                if (!isLoading && !isLastPage) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                            && totalItemCount >= 20) {
-                        isLoading = true;
-                        presenter.loadNextElements(++currentPage);
-                    }
-                }
-            }
-        });
-    }
-
-    private void initViews() {
-        toolbar = findViewById(R.id.tb_books_list);
-        supportActionBar(toolbar);
-        progressBar = findViewById(R.id.pg_comics_list);
-        recyclerView = findViewById(R.id.rv_comics_list);
-        tvEmpty = findViewById(R.id.tv_empty);
-
-    }
-
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
 
@@ -162,6 +170,7 @@ public class BooksListActivity extends NavigationBaseActivity implements BooksLi
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     presenter.loadBooksByQuery(query);
+                    lastQuery = query;
                     if (!finalSearchView.isIconified()) {
                         finalSearchView.setIconified(true);
                     }

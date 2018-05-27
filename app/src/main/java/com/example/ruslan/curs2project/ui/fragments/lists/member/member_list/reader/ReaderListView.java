@@ -1,6 +1,5 @@
 package com.example.ruslan.curs2project.ui.fragments.lists.member.member_list.reader;
 
-import android.support.annotation.NonNull;
 import android.widget.ProgressBar;
 
 import com.arellomobile.mvp.MvpView;
@@ -10,7 +9,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.ui.base.BaseAdapter;
 import com.example.ruslan.curs2project.ui.fragments.lists.member.member_list.MemberAdapter;
-import com.google.firebase.database.Query;
 
 import java.util.List;
 
@@ -26,23 +24,11 @@ public interface ReaderListView extends MvpView,BaseAdapter.OnItemClickListener<
     @StateStrategyType(OneExecutionStateStrategy.class)
     void handleError(Throwable throwable);
 
-    void setReaders(@NonNull Query books);
-
-    void setFriendsByQuery(@NonNull List<Query> books);
-
-    void setRequestsByQuery(@NonNull List<Query> books);
-
-    void setFriends(@NonNull Query books);
-
-    void setRequests(@NonNull Query books);
-
     void setNotLoading();
 
     void showLoading(Disposable disposable);
 
     void hideLoading();
-
-    void showItems(List<Query> queries, String type);
 
     void showDetails(User comics);
 
@@ -61,4 +47,6 @@ public interface ReaderListView extends MvpView,BaseAdapter.OnItemClickListener<
     void setProgressBar(ProgressBar progressBar);
 
     void changeAdapter(int position);
+
+    void changeDataSet(List<User> friends);
 }

@@ -19,8 +19,6 @@ public class ImageActivity extends AppCompatActivity {
 
     private ImageHelper imageHelper;
 
-
-
     public static void start(@NonNull Activity activity, @NonNull Point point) {
         Intent intent = new Intent(activity, ImageActivity.class);
         String crossingJson = new Gson().toJson(point);

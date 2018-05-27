@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 
 import okhttp3.OkHttpClient;
 
-/**
- * Created by Nail Shaykhraziev on 25.03.2018.
- */
 public class OkHttpProvider {
 
     private static volatile OkHttpClient sClient;

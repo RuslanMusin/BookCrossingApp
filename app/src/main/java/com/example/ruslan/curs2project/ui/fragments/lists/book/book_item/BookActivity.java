@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,9 +29,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.dialogs.EditCommentDialog;
-import com.example.ruslan.curs2project.enums.ProfileStatus;
 import com.example.ruslan.curs2project.managers.CommentManager;
-import com.example.ruslan.curs2project.managers.ProfileManager;
 import com.example.ruslan.curs2project.managers.listeners.OnDataChangedListener;
 import com.example.ruslan.curs2project.managers.listeners.OnTaskCompleteListener;
 import com.example.ruslan.curs2project.model.Book;
@@ -62,21 +59,16 @@ import static com.example.ruslan.curs2project.utils.Const.ID_KEY;
 import static com.example.ruslan.curs2project.utils.Const.NAME_KEY;
 import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
-
-/**
- * Created by Nail Shaykhraziev on 25.02.2018.
- */
 public class BookActivity extends NavigationBaseActivity implements BookView,EditCommentDialog.CommentDialogCallback {
 
     private static final String TAG = "BaseAcivity";
-    private CollapsingToolbarLayout collapsingToolbar;
     private Toolbar toolbar;
     private ImageView ivCover;
     private TextView tvAuthors;
     private ExpandableTextView tvDescription;
+    private TextView tvDescName;
     private TextView tvMark;
-
-    private TextView namedTextView;
+    private TextView tvName;
 
     private CommentAdapter adapter;
 
@@ -85,12 +77,11 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
     @InjectPresenter
     BookPresenter presenter;
 
-    private String id;
+    private String bookId;
 
     private Book book;
 
     //comment
-    public static final String AUTHOR_ANIMATION_NEEDED_EXTRA_KEY = "PostDetailsActivity.AUTHOR_ANIMATION_NEEDED_EXTRA_KEY";
     private static final int TIME_OUT_LOADING_COMMENTS = 30000;
 
     private EditText commentEditText;
@@ -104,10 +95,6 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
     private boolean attemptToLoadComments = false;
 
     private CommentManager commentManager;
-    private ProfileManager profileManager;
-    private boolean isPostExist;
-
-    private boolean isAuthorAnimationRequired;
     private CommentsAdapter commentsAdapter;
     private ActionMode mActionMode;
 
@@ -127,14 +114,14 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
         FrameLayout contentFrameLayout = findViewById(R.id.container);
         getLayoutInflater().inflate(R.layout.activity_book, contentFrameLayout);
         initViews();
-        id = getIntent().getStringExtra(ID_KEY);
         book = new Gson().fromJson(getIntent().getStringExtra(BOOK_KEY),Book.class);
+        bookId = book.getId();
         initRecycler();
     }
 
     @Override
     public void getBookId() {
-        presenter.init(id);
+        presenter.init(bookId);
         Log.d(TAG_LOG,"load comments");
     }
 
@@ -230,12 +217,21 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
     public void setBookData(Book book){
         Log.d(TAG_LOG,"set book data presenter");
 
+        tvName.setText(book.getName());
         setAuthors(book.getAuthors());
-        tvDescription.setText(book.getDesc());
+        if(book.getDesc().length() > 0) {
+            String text = book.getDesc().replaceAll("<.+>","");
+          /*  int i = text.lastIndexOf("</");
+            if(i != 0){
+                text = text.substring(0,i);
+            }*/
+            tvDescription.setText(text);
+        } else {
+            tvDescName.setVisibility(View.GONE);
+            tvDescription.setVisibility(View.GONE);
+        }
         tvMark.setText(String.valueOf(book.getMark()));
         setImage(book);
-
-        namedTextView.setText(book.getName());
     }
 
    public void setAuthors(List<String> authors){
@@ -250,7 +246,7 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
         if (comics.getPhotoUrl() != null) {
            ImageLoadHelper.loadPicture(ivCover,comics.getPhotoUrl());
         } else {
-            ImageLoadHelper.loadPictureByDrawable(ivCover, R.drawable.image_error_marvel_logo);
+            ImageLoadHelper.loadPictureByDrawable(ivCover, R.drawable.ic_book);
         }
     }
 
@@ -268,25 +264,16 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
         tvAuthors = findViewById(R.id.tv_authors);
         tvMark = findViewById(R.id.tv_mark);
         tvDescription = findViewById(R.id.extv_desc);
+        tvName = findViewById(R.id.nameEditText);
+        tvDescName = findViewById(R.id.tv_desc_name);
 
-        namedTextView = findViewById(R.id.nameEditText);
-
-        profileManager = ProfileManager.getInstance(this);
         commentManager = CommentManager.getInstance(this);
-
-        isAuthorAnimationRequired =  getIntent().getBooleanExtra(AUTHOR_ANIMATION_NEEDED_EXTRA_KEY, false);
-
-
         commentsRecyclerView = (RecyclerView) findViewById(R.id.commentsRecyclerView);
         scrollView = findViewById(R.id.scrollView);
         commentsLabel = (TextView) findViewById(R.id.commentsLabel);
         commentEditText = (EditText) findViewById(R.id.commentEditText);
-
-
         commentsProgressBar = (ProgressBar) findViewById(R.id.commentsProgressBar);
         warningCommentsTextView = (TextView) findViewById(R.id.warningCommentsTextView);
-
-
 
         final Button sendButton = (Button) findViewById(R.id.sendButton);
 
@@ -298,17 +285,16 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.d(TAG_LOG,"char length = " + charSequence.length());
                 sendButton.setEnabled(charSequence.toString().trim().length() > 0);
                 Log.d(TAG_LOG, "enabled = " + sendButton.isEnabled());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String charSequence = editable.toString();
+              /*  String charSequence = editable.toString();
                 Log.d(TAG_LOG,"after char length = " + charSequence.length());
                 sendButton.setEnabled(charSequence.trim().length() > 0);
-                Log.d(TAG_LOG, "enabled = " + sendButton.isEnabled());
+                Log.d(TAG_LOG, "enabled = " + sendButton.isEnabled());*/
             }
         });
 
@@ -316,16 +302,7 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
             @Override
             public void onClick(View v) {
                 if (hasInternetConnection()) {
-                    ProfileStatus profileStatus = ProfileManager.getInstance(BookActivity.this).checkProfile();
                     sendComment();
-
-
-                    if (profileStatus.equals(ProfileStatus.PROFILE_CREATED)) {
-                        sendComment();
-                    } else {
-//                        doAuthorization(profileStatus);
-                    }
-
                 } else {
                     showSnackBar(R.string.internet_connection_failed);
                 }
@@ -354,7 +331,7 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
         commentsRecyclerView.addItemDecoration(new DividerItemDecoration(commentsRecyclerView.getContext(),
                 ((LinearLayoutManager) commentsRecyclerView.getLayoutManager()).getOrientation()));
 
-        commentManager.getCommentsList(this, id, createOnCommentsChangedDataListener());
+        commentManager.getCommentsList(this, bookId, createOnCommentsChangedDataListener());
     }
 
     private OnDataChangedListener<Comment> createOnCommentsChangedDataListener() {
@@ -411,7 +388,7 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
         String commentText = commentEditText.getText().toString();
         Log.d(TAG_LOG, "send comment = " + commentText);
         if (commentText.length() > 0) {
-            commentManager.createOrUpdateComment(commentText, id, new OnTaskCompleteListener() {
+            commentManager.createOrUpdateComment(commentText, bookId, new OnTaskCompleteListener() {
                 @Override
                 public void onTaskComplete(boolean success) {
                     if (success) {
@@ -432,7 +409,7 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
 
     private void removeComment(String commentId, final ActionMode mode, final int position) {
         showProgress();
-        commentManager.removeComment(commentId, id, new OnTaskCompleteListener() {
+        commentManager.removeComment(commentId, bookId, new OnTaskCompleteListener() {
             @Override
             public void onTaskComplete(boolean success) {
                 hideProgress();
@@ -453,7 +430,7 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
 
     private void updateComment(String newText, String commentId) {
         showProgress();
-        commentManager.updateComment(commentId, newText, id, new OnTaskCompleteListener() {
+        commentManager.updateComment(commentId, newText, bookId, new OnTaskCompleteListener() {
             @Override
             public void onTaskComplete(boolean success) {
                 hideProgress();
@@ -482,7 +459,7 @@ public class BookActivity extends NavigationBaseActivity implements BookView,Edi
             /*MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.comment_context_menu, menu);
 
-            menu.findItem(R.id.editMenuItem).setVisible(hasAccessToEditComment(selectedComment.getAuthorId()));*/
+            menu.findItem(R.bookId.editMenuItem).setVisible(hasAccessToEditComment(selectedComment.getAuthorId()));*/
 
             return true;
         }

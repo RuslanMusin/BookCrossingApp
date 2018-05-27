@@ -45,7 +45,9 @@ public class ImageHelper {
 
                 Log.d(TAG_LOG, " wid = " + width + "  heigh = " + height);
 
-                photoMetadata.getPhoto(mGeoDataClient.asGoogleApiClient()
+                /*float factor = width / (float) b.getWidth();
+                width = (int) (b.getWidth() * factor);*/
+                photoMetadata.getScaledPhoto(mGeoDataClient.asGoogleApiClient(),width,height
                         ).setResultCallback(new ResultCallback<PlacePhotoResult>() {
                     @Override
                     public void onResult(@NonNull PlacePhotoResult placePhotoResult) {

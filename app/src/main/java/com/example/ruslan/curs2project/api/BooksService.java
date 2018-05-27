@@ -8,10 +8,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-/**
- * Created by Nail Shaykhraziev on 25.02.2018.
- */
-
 public interface BooksService {
 
     @GET("./")

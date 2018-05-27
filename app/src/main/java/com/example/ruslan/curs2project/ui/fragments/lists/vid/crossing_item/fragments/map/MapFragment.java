@@ -1,5 +1,6 @@
 package com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.fragments.map;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.ruslan.curs2project.R;
@@ -26,6 +28,8 @@ import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.Cros
 import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_item.fragments.image.ImageHelper;
 import com.example.ruslan.curs2project.utils.FormatterUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceDetectionClient;
@@ -47,6 +51,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +60,7 @@ import static com.example.ruslan.curs2project.utils.Const.PATH_TYPE;
 import static com.example.ruslan.curs2project.utils.Const.PHOTO_TYPE;
 import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     public final static String FR_NAME = "MapFragment";
     private static final String TAG = MapFragment.class.getSimpleName();
@@ -110,12 +115,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
 
+    private LocationRequest mLocationRequest;
+
+    // Location updates intervals in sec
+    private static int UPDATE_INTERVAL = 10000; // 10 sec
+    private static int FATEST_INTERVAL = 5000; // 5 sec
+    private static int DISPLACEMENT = 10; // 10 meters
+
 
     public MapFragment() {
     }
 
-    public BookCrossing getCrossing(){
-        return ((CrossingActivity)getActivity()).getBookCrossing();
+    public BookCrossing getCrossing() {
+        return ((CrossingActivity) getActivity()).getBookCrossing();
     }
 
     @Override
@@ -135,8 +147,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
 
+        threads = new ArrayList<>();
+        createLocationRequest();
         imageHelper = new ImageHelper(Places.getGeoDataClient(this.getActivity()));
-        View viewFull = getLayoutInflater().inflate(R.layout.activity_full_image,null);
+        View viewFull = getLayoutInflater().inflate(R.layout.activity_full_image, null);
         selectedImage = (ImageView) viewFull.findViewById(R.id.selectedImage);
         dialog = new MaterialDialog.Builder(this.getActivity())
                 .title(R.string.title)
@@ -147,22 +161,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         type = INFORMATION_TYPE;
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 switch (position) {
-                    case 0 :
+                    case 0:
                         type = INFORMATION_TYPE;
-                        checkAfterType();
+                        stopLocationUpdates();
                         break;
 
                     case 1:
                         type = PHOTO_TYPE;
-                        checkAfterType();
+                        stopLocationUpdates();
                         break;
 
                     case 2:
                         type = PATH_TYPE;
-                        changeUserMarker();
+                        startLocationUpdates();
                         break;
 
                 }
@@ -171,28 +186,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void checkAfterType() {
-        for(Thread thread : threads) {
+        for (Thread thread : threads) {
             thread.interrupt();
         }
-    }
-
-    private void changeUserMarker() {
-        Thread run = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    try {
-                        readLineForUser();
-                        Thread.sleep(1000*30); //1000 - 1 сек
-                    } catch (InterruptedException ex) {
-//                        ex.printStackTrace();
-                        Log.d(TAG_LOG,"has ex = " + ex.getMessage());
-                    }
-                }
-            }
-        });
-        threads.add(run);
-        run.start();
     }
 
     @Override
@@ -215,12 +211,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if (!userMarker.equals(marker)) {
                             imageHelper.getPhotos(selectedImage, (Point) marker.getTag());
                             dialog.show();
-                            flag =  true;
+                            flag = true;
                             break;
                         }
 
-                    case PATH_TYPE :
-                        if(!userMarker.equals(marker)) {
+                    case PATH_TYPE:
+                        if (!userMarker.equals(marker)) {
                             selectedPoint = (Point) marker.getTag();
                             readLineForUser();
                             flag = true;
@@ -233,6 +229,69 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 //        showCurrentPlace();
     }
+
+    /**
+     * Creating location request object
+     * */
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
+
+    /**
+     * Method to verify google play services on the device
+     * *//*
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this.getActivity());
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }*/
+
+    /**
+     * Starting the location updates
+     * */
+    protected void startLocationUpdates() {
+
+        if (ActivityCompat.checkSelfPermission(this.getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mFusedLocationProviderClient.asGoogleApiClient()
+                , mLocationRequest, this);
+
+    }
+
+    /**
+     * Stopping location updates
+     */
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mFusedLocationProviderClient.asGoogleApiClient(), this);
+    }
+
 
 
     public void setMarkers() {
@@ -265,14 +324,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         updateLocationUI();
         userMarker = map.addMarker(new MarkerOptions().position(selectedPoint.getLatLng()));
         getDeviceLocation();
-         userMarker.setTitle(getString(R.string.person_place));
-         userMarker.setSnippet(FormatterUtil.formatFirebaseDay(new Date(mLastKnownLocation.getTime())));
-        userMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_black_24dp));
 
-
-        readLineForUser();
-
-        changeUserMarker();
+//        changeUserMarker();
 
     }
 
@@ -296,6 +349,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             map.addMarker(new MarkerOptions().position(latLng));
                             userMarker.setPosition(latLng);
 
+
+                            readLineForUser();
+
+
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -312,17 +369,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void readLineForUser() {
+        Log.d(TAG_LOG,"read line");
         if(polylineUser != null) {
             polylineUser.remove();
         }
-        getDeviceLocation();
+//        getDeviceLocation();
+        userMarker.remove();
+        LatLng latLng = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+        map.addMarker(new MarkerOptions().position(latLng));
+        userMarker.setPosition(latLng);
+        userMarker.setTitle(getString(R.string.person_place));
+        userMarker.setSnippet(FormatterUtil.formatFirebaseDay(new Date()));
+        userMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_name));
         PolylineOptions rectOptions = new PolylineOptions();
         rectOptions.add(selectedPoint.getLatLng());
         rectOptions.add(userMarker.getPosition());
         polylineUser = map.addPolyline(rectOptions.color(Color.RED)
                 .geodesic(true));
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(userMarker.getPosition(),DEFAULT_ZOOM));
+        map.moveCamera(CameraUpdateFactory.newLatLng(userMarker.getPosition()));
 
     }
 
@@ -500,5 +565,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastKnownLocation = location;
+
+        Toast.makeText(this.getActivity(), "Location changed!",
+                Toast.LENGTH_SHORT).show();
+
+        // Displaying the new location on UI
+        readLineForUser();
     }
 }

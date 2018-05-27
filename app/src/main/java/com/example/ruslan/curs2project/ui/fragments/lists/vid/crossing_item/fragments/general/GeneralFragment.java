@@ -72,15 +72,12 @@ public class GeneralFragment extends Fragment implements CrossingView,View.OnCli
     public final static String FR_NAME = "GeneralFragment";
 
     private CircularImageView ivCover;
-
     private TextView tvName;
     private TextView tvBookName;
     private TextView tvDate;
     private ExpandableTextView tvDescription;
-
     private TextView tvFollowers;
-
-    private TextView namedTextView;
+    private TextView tvDescName;
 
     private AppCompatButton btnAddMember;
     private AppCompatButton btnAddFollower;
@@ -133,11 +130,9 @@ public class GeneralFragment extends Fragment implements CrossingView,View.OnCli
         isPostExist = true;
         initViews(view);
         crossingId = getCrossing().getId();
-        Log.d(TAG_LOG,"crossingId = " + crossingId);
         initRecycler();
         followersId = new ArrayList<>();
         presenter = new CrossingPresenter();
-        Log.d(TAG_LOG,"init2 = " + crossingId);
         presenter.setView(this);
         currentMode = WATCHER_TYPE;
         btnAddMember.setVisibility(View.GONE);
@@ -233,11 +228,14 @@ public class GeneralFragment extends Fragment implements CrossingView,View.OnCli
 
         tvName.setText(bookCrossing.getName());
         tvBookName.setText(bookCrossing.getBookName());
-        tvDescription.setText(bookCrossing.getDescription());
+        if(bookCrossing.getDescription().length() > 0) {
+            tvDescription.setText(bookCrossing.getDescription());
+        } else {
+            tvDescName.setVisibility(View.GONE);
+            tvDescription.setVisibility(View.GONE);
+        }
         tvDate.setText(sdf.format(bookCrossing.getDate()));
         setImage(bookCrossing);
-
-        namedTextView.setText(bookCrossing.getName());
     }
 
     public void setImage(BookCrossing comics) {
@@ -325,15 +323,15 @@ public class GeneralFragment extends Fragment implements CrossingView,View.OnCli
 
     private void findViews(View view) {
         ivCover = view.findViewById(R.id.iv_crossing);
-        tvName = view.findViewById(R.id.tv_name);
         tvBookName = view.findViewById(R.id.tv_book_name);
         tvDate = view.findViewById(R.id.tv_date);
         tvDescription = view.findViewById(R.id.extv_desc);
+        tvDescName = view.findViewById(R.id.tv_desc_name);
 
         btnAddMember = view.findViewById(R.id.btn_add_member);
         btnAddFollower = view.findViewById(R.id.btn_add_follower);
 
-        namedTextView = view.findViewById(R.id.nameEditText);
+        tvName = view.findViewById(R.id.nameEditText);
         tvFollowers = view.findViewById(R.id.tv_followers);
 
         profileManager = ProfileManager.getInstance(this.getActivity());
@@ -429,7 +427,7 @@ public class GeneralFragment extends Fragment implements CrossingView,View.OnCli
                   btnAddFollower.setText(R.string.unsubscribe);
                   btnAddMember.setVisibility(View.VISIBLE);
               }
-
+              break;
 
           case R.id.tv_followers:
               getCrossing().setFollowersId(followersId);
