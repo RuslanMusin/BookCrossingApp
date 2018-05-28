@@ -208,7 +208,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 boolean flag = false;
                 switch (type) {
                     case PHOTO_TYPE:
-                        if (!userMarker.equals(marker)) {
+                        if (!marker.equals(userMarker)) {
                             imageHelper.getPhotos(selectedImage, (Point) marker.getTag());
                             dialog.show();
                             flag = true;
@@ -216,7 +216,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         }
 
                     case PATH_TYPE:
-                        if (!userMarker.equals(marker)) {
+                        if (!marker.equals(userMarker)) {
                             selectedPoint = (Point) marker.getTag();
                             readLineForUser();
                             flag = true;
@@ -322,7 +322,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         selectedPoint = points.get(points.size()-1);
 
         updateLocationUI();
-        userMarker = map.addMarker(new MarkerOptions().position(selectedPoint.getLatLng()));
+//        userMarker = map.addMarker(new MarkerOptions().position(selectedPoint.getLatLng()));
         getDeviceLocation();
 
 //        changeUserMarker();
@@ -344,9 +344,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         if (task.isSuccessful() && task.getResult() != null) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
-                            userMarker.remove();
+                            if(userMarker != null) {
+                                userMarker.remove();
+                            }
                             LatLng latLng = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
-                            map.addMarker(new MarkerOptions().position(latLng));
+                            userMarker = map.addMarker(new MarkerOptions().position(latLng));
                             userMarker.setPosition(latLng);
 
 
@@ -356,9 +358,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
-                            map.moveCamera(CameraUpdateFactory
+                            /*map.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                            map.getUiSettings().setMyLocationButtonEnabled(false);
+                            map.getUiSettings().setMyLocationButtonEnabled(false);*/
                         }
                     }
                 });
@@ -373,10 +375,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         if(polylineUser != null) {
             polylineUser.remove();
         }
-//        getDeviceLocation();
-        userMarker.remove();
+        if(userMarker != null) {
+            userMarker.remove();
+        }
         LatLng latLng = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
-        map.addMarker(new MarkerOptions().position(latLng));
+        userMarker = map.addMarker(new MarkerOptions().position(latLng));
         userMarker.setPosition(latLng);
         userMarker.setTitle(getString(R.string.person_place));
         userMarker.setSnippet(FormatterUtil.formatFirebaseDay(new Date()));

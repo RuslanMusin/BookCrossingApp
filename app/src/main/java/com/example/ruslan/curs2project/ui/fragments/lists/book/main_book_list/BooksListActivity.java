@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -88,30 +87,6 @@ public class BooksListActivity extends NavigationBaseActivity implements BooksLi
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            private int currentPage = 0;
-            private boolean isLastPage = false;
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                /*int visibleItemCount = manager.getChildCount();
-                int totalItemCount = manager.getItemCount();
-                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
-                if (!isLoading && !isLastPage) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                            && totalItemCount >= 20) {
-                        isLoading = true;
-                        if(lastQuery == null) {
-                            presenter.loadBooks(++currentPage);
-                        } else {
-                            presenter.loadBooksByQuery(lastQuery,++currentPage);
-                        }
-                    }
-                }*/
-            }
-        });
     }
 
     @Override

@@ -18,18 +18,26 @@ package com.example.ruslan.curs2project.model;
 
 
 import com.example.ruslan.curs2project.utils.FormatterUtil;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+@IgnoreExtraProperties
 public class Comment {
 
     private String id;
     private String text;
     private String authorId;
     private long createdDate;
+
+    @Exclude
+    private transient String authorName;
+
+    @Exclude
+    private transient String authorPhotoUrl;
 
 
     public Comment() {
@@ -74,9 +82,26 @@ public class Comment {
         this.createdDate = createdDate;
     }
 
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getAuthorPhotoUrl() {
+        return authorPhotoUrl;
+    }
+
+    public void setAuthorPhotoUrl(String authorPhotoUrl) {
+        this.authorPhotoUrl = authorPhotoUrl;
+    }
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
 
+        result.put("commentId",id);
         result.put("text", text);
         result.put("createdDate", createdDate);
         result.put("createdDateText", FormatterUtil.getFirebaseDateFormat().format(new Date(createdDate)));

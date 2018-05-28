@@ -79,7 +79,6 @@ public class CrossingActivity extends NavigationBaseActivity implements MapView 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         supportActionBar(toolbar);
-
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -97,9 +96,9 @@ public class CrossingActivity extends NavigationBaseActivity implements MapView 
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new GeneralFragment(), GeneralFragment.FR_NAME);
-        adapter.addFragment(new MapFragment(), MapFragment.FR_NAME);
-        adapter.addFragment(new PhotoFragment(), PhotoFragment.FR_NAME);
+        adapter.addFragment(new GeneralFragment(), getString(R.string.general));
+        adapter.addFragment(new MapFragment(), getString(R.string.map));
+        adapter.addFragment(new PhotoFragment(), getString(R.string.photo));
         viewPager.setAdapter(adapter);
     }
 

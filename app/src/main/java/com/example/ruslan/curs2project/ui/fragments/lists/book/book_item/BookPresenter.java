@@ -5,12 +5,10 @@ import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.example.ruslan.curs2project.model.Comment;
 import com.example.ruslan.curs2project.repository.RepositoryProvider;
 
-import static com.example.ruslan.curs2project.utils.Const.DEFAULT_BOOK_SORT;
-import static com.example.ruslan.curs2project.utils.Const.PAGE_SIZE;
 import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
-import static com.example.ruslan.curs2project.utils.Const.ZERO_OFFSET;
 
 /**
  * Created by Ruslan on 02.03.2018.
@@ -36,22 +34,12 @@ public class BookPresenter extends MvpPresenter<BookView> {
     }
 
     @SuppressLint("CheckResult")
-    public void loadNextComments(int page, String bookId) {
+    public void loadComments(OnCommentClickListener listener,String bookId) {
         RepositoryProvider.getBookCommentRepository(bookId)
-                .getComments(page * PAGE_SIZE, PAGE_SIZE, DEFAULT_BOOK_SORT)
-                .doOnSubscribe(getViewState()::showLoading)
-                .doAfterTerminate(getViewState()::hideLoading)
-                .doAfterTerminate(getViewState()::setNotLoading)
-                .subscribe(getViewState()::addMoreItems, getViewState()::handleError);
+                .getComments(listener);
     }
 
-    @SuppressLint("CheckResult")
-    public void loadComments(String bookId) {
-        RepositoryProvider.getBookCommentRepository(bookId)
-                .getComments(ZERO_OFFSET, PAGE_SIZE, DEFAULT_BOOK_SORT)
-                .doOnSubscribe(getViewState()::showLoading)
-                .doAfterTerminate(getViewState()::hideLoading)
-                .doAfterTerminate(getViewState()::setNotLoading)
-                .subscribe(getViewState()::showItems, getViewState()::handleError);
+    public void createComment(String bookId, Comment comment,OnCommentClickListener listener) {
+        RepositoryProvider.getBookCommentRepository(bookId).createComment(comment,listener);
     }
 }

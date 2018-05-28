@@ -7,9 +7,11 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.ruslan.curs2project.model.BookCrossing;
+import com.example.ruslan.curs2project.model.Comment;
 import com.example.ruslan.curs2project.repository.RepositoryProvider;
 import com.example.ruslan.curs2project.repository.json.BookCrossingRepository;
 import com.example.ruslan.curs2project.repository.json.CrossingMembersRepository;
+import com.example.ruslan.curs2project.ui.fragments.lists.book.book_item.OnCommentClickListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,8 +77,6 @@ public class CrossingPresenter extends MvpPresenter<CrossingView> {
     public void findFollowers(String crossingId) {
         RepositoryProvider.getBookCrossingRepository()
                 .findFollowers(crossingId)
-                .doOnSubscribe(getView()::showLoading)
-                .doAfterTerminate(getView()::hideLoading)
                 .subscribe(getView():: setFollowers, getView()::handleError);
     }
 
@@ -84,8 +84,6 @@ public class CrossingPresenter extends MvpPresenter<CrossingView> {
     public void findPoint(String crossingId, String userId) {
         RepositoryProvider.getPointRepository()
                 .findPoint(crossingId, userId)
-                .doOnSubscribe(getView()::showLoading)
-                .doAfterTerminate(getView()::hideLoading)
                 .subscribe(getView():: setUserPoint, getView()::handleError);
     }
 
@@ -93,31 +91,10 @@ public class CrossingPresenter extends MvpPresenter<CrossingView> {
     public void findIsFollower(String crossingId, String userId) {
         RepositoryProvider.getPointRepository()
                 .findPoint(crossingId, userId)
-                .doOnSubscribe(getView()::showLoading)
-                .doAfterTerminate(getView()::hideLoading)
                 .subscribe(getView():: setUserPoint, getView()::handleError);
     }
 
-   /* @SuppressLint("CheckResult")
-    public void loadNextComments(int page, String bookId) {
-        RepositoryProvider.getCrossingCommentRepository(bookId)
-                .getComments(page * PAGE_SIZE, PAGE_SIZE, DEFAULT_BOOK_SORT)
-                .doOnSubscribe(getViewState()::showLoading)
-                .doAfterTerminate(getViewState()::hideLoading)
-                .doAfterTerminate(getViewState()::setNotLoading)
-                .subscribe(getViewState()::addMoreItems, getViewState()::handleError);
-    }
 
-    @SuppressLint("CheckResult")
-    public void loadComments(String bookId) {
-        RepositoryProvider.getCrossingCommentRepository(bookId)
-                .getComments(ZERO_OFFSET, PAGE_SIZE, DEFAULT_BOOK_SORT)
-                .doOnSubscribe(getViewState()::showLoading)
-                .doAfterTerminate(getViewState()::hideLoading)
-                .doAfterTerminate(getViewState()::setNotLoading)
-                .subscribe(getViewState()::showItems, getViewState()::handleError);
-    }
-*/
     public void addMember(String userId, String crossingId) {
         crossingMembersRepository.createMember(userId,crossingId);
     }
@@ -133,5 +110,15 @@ public class CrossingPresenter extends MvpPresenter<CrossingView> {
         crossingRepository.removeFollower(crossing, userId);
 
         FirebaseMessaging.getInstance().unsubscribeFromTopic(crossing.getId());
+    }
+
+    @SuppressLint("CheckResult")
+    public void loadComments(OnCommentClickListener listener, String crossingId) {
+        RepositoryProvider.getCrossingCommentRepository(crossingId)
+                .getComments(listener);
+    }
+
+    public void createComment(String crossingId, Comment comment, OnCommentClickListener listener) {
+        RepositoryProvider.getCrossingCommentRepository(crossingId).createComment(comment,listener);
     }
 }

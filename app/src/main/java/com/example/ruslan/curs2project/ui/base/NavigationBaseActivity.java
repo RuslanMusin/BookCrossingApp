@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -118,21 +119,31 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
     }
 
     private void setActionBar(Toolbar toolbar) {
+        Log.d(TAG_LOG,"set action bar");
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar,
                 R.string.drawer_open, R.string.drawer_close);
         mDrawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        mNavigationView.setOnClickListener(new View.OnClickListener() {
+        mDrawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onClick(View v) {
-                if(mDrawer.isDrawerOpen(mDrawer)) {
-                    Log.d(TAG_LOG,"close");
-                    mDrawer.closeDrawer(mDrawer);
-                } else {
-                    Log.d(TAG_LOG,"open");
-                    mDrawer.openDrawer(mDrawer);
-                }
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
             }
         });
     }

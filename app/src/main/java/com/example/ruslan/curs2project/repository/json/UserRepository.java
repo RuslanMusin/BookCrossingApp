@@ -2,6 +2,7 @@ package com.example.ruslan.curs2project.repository.json;
 
 import android.util.Log;
 
+import com.example.ruslan.curs2project.model.Comment;
 import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.model.db_dop_models.ElementId;
 import com.example.ruslan.curs2project.model.db_dop_models.Identified;
@@ -141,6 +142,14 @@ public class UserRepository {
             queries.add(databaseReference.child(id));
         }
         return Single.just(queries);
+    }
+
+    public List<Query> loadByComments(List<Comment> comments){
+        List<Query> queries = new ArrayList<>();
+        for(Comment comment : comments) {
+            queries.add(databaseReference.child(comment.getAuthorId()));
+        }
+        return queries;
     }
 
     public Single<Query> findFriends(String userId){

@@ -293,7 +293,16 @@
 
             </com.example.ruslan.curs2project.utils.views.ExpandableTextView>
 
-            <include layout="@layout/layout_comments" />
+            <TextView
+                android:id="@+id/tv_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin.large"
+                android:text="@string/comments"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text.16" />
+
+            <include layout="@layout/fragment_recycler_list" />
 
         </LinearLayout>
 

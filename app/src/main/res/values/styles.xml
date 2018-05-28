@@ -22,7 +22,7 @@
         <item name="contentPaddingTop">8dp</item>
         <item name="contentPaddingLeft">8dp</item>
         <item name="contentPaddingRight">8dp</item>
-        <item name="cardBackgroundColor">@color/primary</item>
+
     </style>
 
     <style name="TextAppearance.Second" parent="@android:style/TextAppearance">
