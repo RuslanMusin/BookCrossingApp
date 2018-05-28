@@ -14,9 +14,7 @@ import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
 
-/**
- * Created by Nail Shaykhraziev on 26.02.2018.
- */
+
 public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private final List<T> items = new ArrayList<>();

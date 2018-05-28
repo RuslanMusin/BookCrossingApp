@@ -6,14 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ruslan.curs2project.R;
@@ -22,8 +18,6 @@ import com.example.ruslan.curs2project.model.db_dop_models.Identified;
 import com.example.ruslan.curs2project.repository.RepositoryProvider;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.NavigationBaseActivity;
-import com.example.ruslan.curs2project.ui.start.login.LoginPresenter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -31,17 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SettingsActivity extends NavigationBaseActivity implements CompoundButton.OnCheckedChangeListener{
-
-    private Button enterBtn;
-    private TextView tvRegistration;
-    private TextInputLayout tiUsername;
-    private TextInputLayout tiPassword;
-    private EditText etUsername;
-    private EditText etPassword;
-
-    private FirebaseAuth fireAuth;
-
-    private LoginPresenter presenter;
 
     private boolean lastCheck;
 

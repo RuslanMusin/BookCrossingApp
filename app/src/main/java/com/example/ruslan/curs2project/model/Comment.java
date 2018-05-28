@@ -17,14 +17,10 @@
 package com.example.ruslan.curs2project.model;
 
 
-import com.example.ruslan.curs2project.utils.FormatterUtil;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 @IgnoreExtraProperties
 public class Comment {
 
@@ -41,11 +37,9 @@ public class Comment {
 
 
     public Comment() {
-        // Default constructor required for calls to DataSnapshot.getValue(Comment.class)
     }
 
     public Comment(String text) {
-
         this.text = text;
         this.createdDate = Calendar.getInstance().getTimeInMillis();
     }
@@ -96,16 +90,5 @@ public class Comment {
 
     public void setAuthorPhotoUrl(String authorPhotoUrl) {
         this.authorPhotoUrl = authorPhotoUrl;
-    }
-
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-
-        result.put("commentId",id);
-        result.put("text", text);
-        result.put("createdDate", createdDate);
-        result.put("createdDateText", FormatterUtil.getFirebaseDateFormat().format(new Date(createdDate)));
-
-        return result;
     }
 }

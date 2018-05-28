@@ -11,10 +11,6 @@ import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by Nail Shaykhraziev on 26.02.2018.
- */
-
 public final class RxUtils {
 
     private RxUtils() {

@@ -5,7 +5,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="@dimen/intrinsic_padding"
-    tools:context=".ui.fragments.lists.member.member_item.EditProfileActivity">
+    >
 
     <ScrollView
         android:id="@+id/regForm"

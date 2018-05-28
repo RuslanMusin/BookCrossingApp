@@ -3,10 +3,9 @@ package com.example.ruslan.curs2project.repository.json;
 import android.util.Log;
 
 import com.example.ruslan.curs2project.model.Comment;
-import com.example.ruslan.curs2project.model.CommentTwo;
 import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.repository.RepositoryProvider;
-import com.example.ruslan.curs2project.ui.fragments.lists.book.book_item.OnCommentClickListener;
+import com.example.ruslan.curs2project.ui.book.book_item.OnCommentClickListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,12 +30,6 @@ public class CrossingCommentRepository {
         this.databaseReference = FirebaseDatabase.getInstance().getReference().child(TABLE_NAME).child(bookId);
     }
 
-    public void createComment(CommentTwo comment) {
-        String key = databaseReference.push().getKey();
-        comment.setId(key);
-        databaseReference.setValue(comment);
-    }
-
     public DatabaseReference readComment(String pointId) {
         return databaseReference.child(pointId);
     }
@@ -45,7 +38,7 @@ public class CrossingCommentRepository {
         databaseReference.child(pointId).removeValue();
     }
 
-    public void updateComment(CommentTwo comment){
+    public void updateComment(Comment comment){
         Map<String, Object> updatedValues = new HashMap<>();
         databaseReference.child(comment.getId()).updateChildren(updatedValues);
     }

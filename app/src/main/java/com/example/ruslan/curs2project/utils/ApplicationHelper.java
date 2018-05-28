@@ -20,12 +20,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.ruslan.curs2project.Application;
-import com.example.ruslan.curs2project.managers.DatabaseHelper;
 import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.repository.RepositoryProvider;
 import com.example.ruslan.curs2project.repository.json.UserRepository;
 import com.example.ruslan.curs2project.ui.base.NavigationPresenter;
-import com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list.BooksListActivity;
+import com.example.ruslan.curs2project.ui.book.main_book_list.BooksListActivity;
 import com.example.ruslan.curs2project.ui.start.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,23 +37,8 @@ import com.google.firebase.storage.StorageReference;
 
 import static com.example.ruslan.curs2project.utils.Const.TAG_LOG;
 
-/**
- * Created by Kristina on 10/28/16.
- */
 
 public class ApplicationHelper {
-
-    private static final String TAG = ApplicationHelper.class.getSimpleName();
-    private static DatabaseHelper databaseHelper;
-
-    public static DatabaseHelper getDatabaseHelper() {
-        return databaseHelper;
-    }
-
-    public static void initDatabaseHelper(android.app.Application application) {
-        databaseHelper = DatabaseHelper.getInstance(application);
-        databaseHelper.init();
-    }
 
     public static StorageReference getStorageReference(){
         return FirebaseStorage.getInstance().getReference();

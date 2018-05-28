@@ -4,10 +4,10 @@ import android.util.Log;
 
 import com.example.ruslan.curs2project.model.Book;
 import com.example.ruslan.curs2project.model.BookCrossing;
-import com.example.ruslan.curs2project.model.CommentTwo;
+import com.example.ruslan.curs2project.model.Comment;
 import com.example.ruslan.curs2project.model.Point;
-import com.example.ruslan.curs2project.model.db_dop_models.ElementId;
 import com.example.ruslan.curs2project.model.db_dop_models.CrossingName;
+import com.example.ruslan.curs2project.model.db_dop_models.ElementId;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -44,10 +44,6 @@ public class BookCrossingRepository {
     private final String FIELD_BOOK_PHOTO = "bookPhoto";
     private final String FIELD_BOOK_AUTHOR = "bookAuthor";
     private final String FIELD_LAST_POINT = "lastPointId";
-
-
-
-
 
     PointRepository pointRepository;
 
@@ -139,7 +135,7 @@ public class BookCrossingRepository {
         databaseReference.child(pointId).removeValue();
     }
 
-    public void updateCrossing(CommentTwo comment){
+    public void updateCrossing(Comment comment){
         Map<String, Object> updatedValues = new HashMap<>();
         databaseReference.child(comment.getId()).updateChildren(updatedValues);
     }

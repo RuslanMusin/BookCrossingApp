@@ -1,8 +1,6 @@
 package com.example.ruslan.curs2project.model;
 
 
-import android.os.Parcel;
-
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -12,19 +10,13 @@ import java.util.List;
 public class Book {
 
     private String id;
-
     private String name;
-
     private List<String> authors;
-
     private String photoUrl;
-
-    private Integer mark = 0;
-
     private String desc;
 
     @Exclude
-    transient private List<CommentTwo> comments;
+    transient private List<Comment> comments;
 
     @Exclude
     transient private List<BookCrossing> crossings;
@@ -32,27 +24,6 @@ public class Book {
     public Book() {
     }
 
-    public Book(String name, List<String> authors, String photoUrl, Integer mark, List<CommentTwo> comments, List<BookCrossing> crossings) {
-        this.name = name;
-        this.authors = authors;
-        this.photoUrl = photoUrl;
-        this.mark = mark;
-        this.comments = comments;
-        this.crossings = crossings;
-    }
-
-    protected Book(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        authors = in.createStringArrayList();
-        photoUrl = in.readString();
-        if (in.readByte() == 0) {
-            mark = null;
-        } else {
-            mark = in.readInt();
-        }
-        desc = in.readString();
-    }
 
     public String getId() {
         return id;
@@ -86,14 +57,6 @@ public class Book {
         this.photoUrl = photoUrl;
     }
 
-    public Integer getMark() {
-        return mark;
-    }
-
-    public void setMark(Integer mark) {
-        this.mark = mark;
-    }
-
     public String getDesc() {
         return desc;
     }
@@ -102,19 +65,19 @@ public class Book {
         this.desc = desc;
     }
 
-    public List<CommentTwo> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentTwo> comments) {
-        this.comments = comments;
-    }
-
     public List<BookCrossing> getCrossings() {
         return crossings;
     }
 
     public void setCrossings(List<BookCrossing> crossings) {
         this.crossings = crossings;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

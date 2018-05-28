@@ -53,7 +53,7 @@
                     android:layout_centerInParent="true"
                     android:visibility="visible" />
 
-                <com.example.ruslan.curs2project.utils.views.CircularImageView
+                <com.example.ruslan.curs2project.ui.widget.CircularImageView
                     android:id="@+id/iv_crossing"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -248,7 +248,7 @@
             android:textColor="@color/primary_text"
             android:textSize="@dimen/text.16" />
 
-        <com.example.ruslan.curs2project.utils.views.ExpandableTextView
+        <com.example.ruslan.curs2project.ui.widget.ExpandableTextView
             android:id="@+id/extv_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -289,7 +289,7 @@
 
             </RelativeLayout>
 
-        </com.example.ruslan.curs2project.utils.views.ExpandableTextView>
+        </com.example.ruslan.curs2project.ui.widget.ExpandableTextView>
 
         <ProgressBar
             android:id="@+id/progress_loader"

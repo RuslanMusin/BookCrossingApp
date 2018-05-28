@@ -40,19 +40,15 @@ public class UserRepository {
     private final String USER_REQUESTS = "user_requests";
 
 
-
     private final String FIELD_ID = "id";
     private final String FIELD_NAME = "username";
     private final String FIELD_RELATION = "relation";
-
 
     public UserRepository() {
         this.databaseReference = FirebaseDatabase.getInstance().getReference().child(TABLE_NAME);
     }
 
     public void createUser(User user) {
-       /* String id = databaseReference.child(TABLE_NAME).push().getKey();
-        user.setId(id);*/
         databaseReference.child(user.getId()).setValue(user, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

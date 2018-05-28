@@ -9,30 +9,21 @@ import java.util.List;
 public class BookCrossing {
 
     private String id;
-
     private String name;
-
     private String description;
-
     private String keyPhrase;
-
     private String bookId;
-
     private String bookName;
-
     private String bookPhoto;
-
     private String bookAuthor;
-
     private long date;
-
     private String lastPointId;
 
     @Exclude
     private List<Point> points;
 
     @Exclude
-    private List<CommentTwo> comments;
+    private List<Comment> comments;
 
     @Exclude
     private List<String> followersId;
@@ -89,11 +80,11 @@ public class BookCrossing {
         this.points = points;
     }
 
-    public List<CommentTwo> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<CommentTwo> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 

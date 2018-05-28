@@ -19,7 +19,6 @@ public class PointRepository {
 
     public final String TABLE_NAME = "points";
 
-
     private final String FIELD_ID = "id";
     private final String FIELD_DESC = "desc";
     private final String FIELD_LONG = "longitude";
@@ -27,8 +26,6 @@ public class PointRepository {
     private final String FIELD_PHOTO_URL = "photoUrl";
     private final String FIELD_TIME = "date";
     private final String FIELD_EDITOR = "editorId";
-
-
 
     public PointRepository() {
         this.databaseReference = FirebaseDatabase.getInstance().getReference().child(TABLE_NAME);
@@ -90,13 +87,4 @@ public class PointRepository {
         return Single.just(query);
 
     }
-
-    /*public Single<List<Query>> loadByIds(List<String> crossingsIds) {
-        List<Query> queries = new ArrayList<>();
-        for(String id : crossingsIds) {
-            queries.add(databaseReference.child(id));
-        }
-        return Single.just(queries);
-
-    }*/
 }

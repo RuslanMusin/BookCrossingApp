@@ -6,7 +6,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -20,12 +19,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.example.ruslan.curs2project.R;
-import com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list.BooksListActivity;
-import com.example.ruslan.curs2project.ui.fragments.lists.member.member_item.PersonalActivity;
-import com.example.ruslan.curs2project.ui.fragments.lists.member.member_list.reader.ReaderListActivity;
-import com.example.ruslan.curs2project.ui.fragments.lists.vid.crossing_list.CrossingListActivity;
+import com.example.ruslan.curs2project.R;import com.example.ruslan.curs2project.ui.book.main_book_list.BooksListActivity;
+import com.example.ruslan.curs2project.ui.crossing.crossing_list.CrossingListActivity;
+import com.example.ruslan.curs2project.ui.member.member_item.PersonalActivity;
+import com.example.ruslan.curs2project.ui.member.member_list.reader.ReaderListActivity;
 import com.example.ruslan.curs2project.ui.start.SettingsActivity;
+import com.example.ruslan.curs2project.ui.start.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -40,7 +39,6 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
     protected ImageView headerImage;
 
     NavigationPresenter navigationPresenter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +96,7 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
 
                 case R.id.menu_logout:
                     FirebaseAuth.getInstance().signOut();
-//                    LoginActivity.start(this);
+                    LoginActivity.start(this);
                     break;
             }
             return true;
@@ -124,28 +122,6 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
                 R.string.drawer_open, R.string.drawer_close);
         mDrawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
-        mDrawer.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-
-            }
-
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
     }
 
     public void showProgress() {
@@ -168,7 +144,6 @@ public class NavigationBaseActivity extends MvpAppCompatActivity {
     }
 
     public void hideKeyboard() {
-        // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.model.User;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
-import com.example.ruslan.curs2project.ui.fragments.lists.book.main_book_list.BooksListActivity;
+import com.example.ruslan.curs2project.ui.book.main_book_list.BooksListActivity;
 import com.example.ruslan.curs2project.ui.start.login.LoginActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;

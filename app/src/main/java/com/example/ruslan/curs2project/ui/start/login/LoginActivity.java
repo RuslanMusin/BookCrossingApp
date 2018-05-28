@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.ruslan.curs2project.R;
 import com.example.ruslan.curs2project.ui.base.BaseActivity;
-import com.example.ruslan.curs2project.ui.fragments.lists.member.member_item.PersonalActivity;
+import com.example.ruslan.curs2project.ui.member.member_item.PersonalActivity;
 import com.example.ruslan.curs2project.ui.start.registration.RegistrationActivity;
 import com.google.firebase.auth.FirebaseAuth;
 

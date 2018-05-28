@@ -7,7 +7,7 @@
     android:paddingBottom="@dimen/large_intrinsic_padding"
     android:paddingTop="@dimen/large_intrinsic_padding">
 
-    <com.example.ruslan.curs2project.utils.views.CircularImageView
+    <com.example.ruslan.curs2project.ui.widget.CircularImageView
         android:id="@+id/avatarImageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -16,7 +16,7 @@
         app:border="true"
         app:border_width="0dp" />
 
-    <com.example.ruslan.curs2project.utils.views.ExpandableTextView
+    <com.example.ruslan.curs2project.ui.widget.ExpandableTextView
         android:id="@+id/commentText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,15 +57,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@id/dateTextView"
-                android:layout_margin="@dimen/margin.small"
+                android:layout_margin="@dimen/margin.normal"
                 />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/iv_reply"
-                android:layout_marginTop="@dimen/margin.normal"
-                android:background="@android:color/darker_gray"/>
 
 
             <TextView
@@ -78,7 +71,7 @@
 
         </RelativeLayout>
 
-    </com.example.ruslan.curs2project.utils.views.ExpandableTextView>
+    </com.example.ruslan.curs2project.ui.widget.ExpandableTextView>
 
   <!--  <ImageView
         android:id="@+id/iv_reply2"

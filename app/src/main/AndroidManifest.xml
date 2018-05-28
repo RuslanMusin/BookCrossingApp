@@ -9,9 +9,9 @@
     <application
         android:name=".Application"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_book"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_book"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.start.login.LoginActivity">
@@ -24,19 +24,15 @@
 
         <activity android:name=".ui.base.NavigationBaseActivity"/>
         <activity android:name=".ui.start.registration.RegistrationActivity"/>
-        <activity android:name=".ui.fragments.lists.member.member_item.PersonalActivity"/>
-
-        <activity android:name=".ui.fragments.lists.book.main_book_list.BooksListActivity"/>
-        <activity android:name=".ui.fragments.lists.book.book_item.BookActivity"/>
-        <activity android:name=".ui.fragments.lists.vid.add_crossing.AddCrossingActivity"/>
-        <activity android:name=".ui.fragments.lists.vid.crossing_item.CrossingActivity"/>
-        <activity android:name=".ui.fragments.lists.vid.crossing_list.CrossingListActivity"/>
-        <activity android:name=".ui.fragments.lists.vid.crossing_item.fragments.image.ImageActivity"/>
-
-        <activity android:name=".ui.fragments.lists.vid.add_point.AddPointActivity"/>
-        <activity android:name=".ui.fragments.lists.member.member_list.member.MemberListActivity"/>
-        <activity android:name=".ui.fragments.lists.member.member_list.reader.ReaderListActivity"/>
-
+        <activity android:name=".ui.member.member_item.PersonalActivity"/>
+        <activity android:name=".ui.book.main_book_list.BooksListActivity"/>
+        <activity android:name=".ui.book.book_item.BookActivity"/>
+        <activity android:name=".ui.crossing.add_crossing.AddCrossingActivity"/>
+        <activity android:name=".ui.crossing.crossing_item.CrossingActivity"/>
+        <activity android:name=".ui.crossing.crossing_list.CrossingListActivity"/>
+        <activity android:name=".ui.crossing.add_point.AddPointActivity"/>
+        <activity android:name=".ui.member.member_list.member.MemberListActivity"/>
+        <activity android:name=".ui.member.member_list.reader.ReaderListActivity"/>
         <activity android:name=".ui.start.SettingsActivity"/>
 
 
